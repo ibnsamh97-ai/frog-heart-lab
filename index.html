@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مختبر قلب الضفدع</title>
+<meta name="description" content="محاكاة تفاعلية للجزء العملي: تخدير الضفدع وتشريحه وكشف القلب، ثم عدّ الضربات قبل إضافة الأدرينالين والأستيل كولين وبعدها.">
+<meta property="og:title" content="مختبر قلب الضفدع">
+<meta property="og:description" content="محاكاة تفاعلية لتأثير الأدرينالين والأستيل كولين على نبض قلب الضفدع.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://ibnsamh97-ai.github.io/frog-heart-lab/assets/preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%233f63cc'/%3E%3Cpath d='M32 52C18 42 12 34 12 25a10 10 0 0 1 20-3 10 10 0 0 1 20 3c0 9-6 17-20 27z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gSteel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef2f5"/><stop offset=".5" stop-color="#b9c3cb"/><stop offset="1" stop-color="#7f8b95"/></linearGradient>
+    <radialGradient id="gPinHead" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#f7c2f3"/><stop offset=".45" stop-color="#b54fbb"/><stop offset="1" stop-color="#5e1a69"/></radialGradient>
+    <radialGradient id="gPinHead2" cx=".35" cy=".3" r=".75"><stop offset="0" stop-color="#ffd0dc"/><stop offset=".45" stop-color="#e05a83"/><stop offset="1" stop-color="#7b1938"/></radialGradient>
+    <radialGradient id="gCottonI" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dfe3e6"/></radialGradient>
+  </defs>
+  <symbol id="ic-anest" viewBox="0 0 48 48">
+    <rect x="28" y="11" width="13" height="23" rx="3" fill="#9a5a19" stroke="#5e370f" stroke-width="1"/>
+    <rect x="30" y="6" width="9" height="6" rx="1.5" fill="#39414a"/>
+    <rect x="29.5" y="18" width="10" height="8" fill="#f2e8d2"/>
+    <g fill="#c4cad0"><circle cx="14" cy="32" r="9.5"/><circle cx="22" cy="35" r="8.5"/><circle cx="16" cy="39" r="8.5"/><circle cx="8" cy="37" r="7.5"/></g>
+    <g fill="url(#gCottonI)"><circle cx="14" cy="32" r="8"/><circle cx="22" cy="35" r="7"/><circle cx="16" cy="39" r="7"/><circle cx="8" cy="37" r="6"/></g>
+    <ellipse cx="16" cy="36" rx="8" ry="5" fill="#8fbad6" opacity=".45"/>
+  </symbol>
+  <symbol id="ic-alcohol" viewBox="0 0 48 48">
+    <path d="M28 14h12v18a3 3 0 0 1-3 3h-6a3 3 0 0 1-3-3z" fill="#e3f1f6" stroke="#7fa1b1" stroke-width="1.1"/>
+    <rect x="28.6" y="22" width="10.8" height="12.4" rx="2" fill="#c6e3ee" opacity=".8"/>
+    <rect x="30" y="8" width="8" height="7" rx="1.5" fill="#2f6db3"/>
+    <rect x="28.6" y="19" width="10.8" height="6" fill="#2f6db3"/>
+    <text x="34" y="23.6" font-size="4.6" font-family="IBM Plex Mono, monospace" font-weight="600" fill="#fff" text-anchor="middle">70%</text>
+    <g fill="#c4cad0"><circle cx="13" cy="33" r="9.5"/><circle cx="21" cy="36" r="8.5"/><circle cx="15" cy="40" r="8.5"/><circle cx="7" cy="38" r="7"/></g>
+    <g fill="url(#gCottonI)"><circle cx="13" cy="33" r="8"/><circle cx="21" cy="36" r="7"/><circle cx="15" cy="40" r="7"/><circle cx="7" cy="38" r="5.5"/></g>
+  </symbol>
+  <symbol id="ic-pins" viewBox="0 0 48 48">
+    <line x1="13" y1="45" x2="20" y2="15" stroke="#8b949c" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="20.5" cy="12" r="6.5" fill="url(#gPinHead)"/><circle cx="18.6" cy="10" r="1.8" fill="#fff" opacity=".8"/>
+    <line x1="29" y1="44" x2="34" y2="20" stroke="#8b949c" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="34.5" cy="17" r="6.5" fill="url(#gPinHead2)"/><circle cx="32.6" cy="15" r="1.8" fill="#fff" opacity=".8"/>
+  </symbol>
+  <symbol id="ic-forceps" viewBox="0 0 48 48">
+    <path d="M41 5 Q21 17 6 43" fill="none" stroke="#4c5761" stroke-width="4.2" stroke-linecap="round"/>
+    <path d="M44.5 8.5 Q31 29 6 43" fill="none" stroke="#4c5761" stroke-width="4.2" stroke-linecap="round"/>
+    <path d="M41 5 Q21 17 6 43" fill="none" stroke="#d4dbe1" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M44.5 8.5 Q31 29 6 43" fill="none" stroke="#b7c1c9" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M40 4.5 L45.5 9.5" stroke="#4c5761" stroke-width="5" stroke-linecap="round"/>
+    <g stroke="#7c8790" stroke-width=".9"><path d="M27 16l2 2.4M25 18l2 2.4M23 20.2l2 2.4"/><path d="M33 24l2.6 1.5M31.3 26.6l2.6 1.5M29.4 29.1l2.6 1.5"/></g>
+  </symbol>
+  <symbol id="ic-scissors" viewBox="0 0 48 48">
+    <path d="M32 15 L6 43" stroke="#4c5761" stroke-width="5" stroke-linecap="round"/>
+    <path d="M37 20 L6 43" stroke="#4c5761" stroke-width="5" stroke-linecap="round"/>
+    <path d="M32 15 L6 43" stroke="#dfe5ea" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M37 20 L6 43" stroke="#b3bdc5" stroke-width="2.6" stroke-linecap="round"/>
+    <circle cx="35.5" cy="10.5" r="6" fill="none" stroke="#4c5761" stroke-width="3.4"/>
+    <circle cx="41.5" cy="21.5" r="6" fill="none" stroke="#4c5761" stroke-width="3.4"/>
+    <circle cx="35.5" cy="10.5" r="6" fill="none" stroke="#c5ced5" stroke-width="1.4"/>
+    <circle cx="41.5" cy="21.5" r="6" fill="none" stroke="#c5ced5" stroke-width="1.4"/>
+    <circle cx="26.5" cy="23" r="2.2" fill="#39424b"/>
+  </symbol>
+  <symbol id="ic-scalpel" viewBox="0 0 48 48">
+    <path d="M45 6 L25 26 L28.5 29.5 L48 10 Z" fill="url(#gSteel)" stroke="#4c5761" stroke-width="1"/>
+    <g stroke="#7c8790" stroke-width=".9"><path d="M39 13.6l3.3 3.3M36.6 16l3.3 3.3M34.2 18.4l3.3 3.3"/></g>
+    <path d="M25 26 C16 30 9.5 37 5 44 C12.5 41 20.5 35.5 28.5 29.5 Z" fill="#dfe6eb" stroke="#4c5761" stroke-width="1"/>
+  </symbol>
+  <symbol id="ic-ringer" viewBox="0 0 48 48">
+    <path d="M13 19h22v21a5 5 0 0 1-5 5H18a5 5 0 0 1-5-5z" fill="#e3f1f6" stroke="#7fa1b1" stroke-width="1.2"/>
+    <rect x="13.7" y="28" width="20.6" height="16.3" rx="4" fill="#c7e4ee" opacity=".85"/>
+    <rect x="15.5" y="25" width="17" height="11" rx="1" fill="#f6f3ea" stroke="#cbc6b6" stroke-width=".6"/>
+    <rect x="15.5" y="25" width="17" height="3.4" fill="#557a97"/>
+    <rect x="18" y="13" width="12" height="7" rx="1.5" fill="#39414a"/>
+    <path d="M20.5 13V8a3.5 3.5 0 0 1 7 0v5z" fill="#557a97"/>
+    <text x="24" y="34.2" font-size="5" font-family="IBM Plex Mono, monospace" font-weight="600" fill="#39414a" text-anchor="middle">R</text>
+  </symbol>
+  <symbol id="ic-adr" viewBox="0 0 48 48">
+    <path d="M13 19h22v21a5 5 0 0 1-5 5H18a5 5 0 0 1-5-5z" fill="#e3f1f6" stroke="#7fa1b1" stroke-width="1.2"/>
+    <rect x="13.7" y="28" width="20.6" height="16.3" rx="4" fill="#c7e4ee" opacity=".85"/>
+    <rect x="15.5" y="25" width="17" height="11" rx="1" fill="#f6f3ea" stroke="#cbc6b6" stroke-width=".6"/>
+    <rect x="15.5" y="25" width="17" height="3.4" fill="#c7781a"/>
+    <rect x="18" y="13" width="12" height="7" rx="1.5" fill="#39414a"/>
+    <path d="M20.5 13V8a3.5 3.5 0 0 1 7 0v5z" fill="#c7781a"/>
+    <text x="24" y="34.2" font-size="5" font-family="IBM Plex Mono, monospace" font-weight="600" fill="#39414a" text-anchor="middle">R+A</text>
+  </symbol>
+  <symbol id="ic-ach" viewBox="0 0 48 48">
+    <path d="M13 19h22v21a5 5 0 0 1-5 5H18a5 5 0 0 1-5-5z" fill="#e3f1f6" stroke="#7fa1b1" stroke-width="1.2"/>
+    <rect x="13.7" y="28" width="20.6" height="16.3" rx="4" fill="#c7e4ee" opacity=".85"/>
+    <rect x="15.5" y="25" width="17" height="11" rx="1" fill="#f6f3ea" stroke="#cbc6b6" stroke-width=".6"/>
+    <rect x="15.5" y="25" width="17" height="3.4" fill="#16897f"/>
+    <rect x="18" y="13" width="12" height="7" rx="1.5" fill="#39414a"/>
+    <path d="M20.5 13V8a3.5 3.5 0 0 1 7 0v5z" fill="#16897f"/>
+    <text x="24" y="34.2" font-size="4.6" font-family="IBM Plex Mono, monospace" font-weight="600" fill="#39414a" text-anchor="middle">R+Ach</text>
+  </symbol>
+</svg>
+
+<div class="app" dir="rtl" lang="ar">
+  <header class="top">
+    <div class="eyebrow">فسلجة الحيوان العملي · المرحلة الرابعة · المحاضرة الثالثة</div>
+    <h1>مختبر قلب الضفدع</h1>
+    <p class="sub">محاكاة للجزء العملي: تأثير الأدرينالين والأستيل كولين على النبض النسقي لقلب الضفدع، من التخدير والتشريح إلى عدّ الضربات قبل إضافة المحلول وبعدها.</p>
+    <div class="progress">
+      <div class="segs" id="segs" aria-hidden="true"></div>
+      <span class="step-label" id="stepLabel"></span>
+      <button class="btn sm quiet" id="resetBtn" type="button">ابدأ من جديد</button>
+    </div>
+  </header>
+
+  <main class="lab">
+    <div class="col-a">
+      <div class="stage-wrap" id="stageWrap">
+        <svg id="stage" viewBox="0 0 800 1000" role="img" aria-label="لوح التشريح وعليه الضفدع">
+          <defs id="defs"></defs>
+          <g id="world"></g>
+        </svg>
+        <div class="hud">
+          <div class="sw" id="sw" hidden>
+            <div class="sw-time" id="swTime">00:00.0</div>
+            <div class="sw-bar"><i id="swBar"></i></div>
+            <div class="sw-row"><span>الضربات</span><b id="swCount">0</b></div>
+            <div class="sw-state" id="swState"><i></i><span>النبض مستقر</span></div>
+          </div>
+          <div class="speed" role="group" aria-label="سرعة الوقت">
+            <span>الوقت</span>
+            <button type="button" data-speed="1" aria-pressed="true">×1</button>
+            <button type="button" data-speed="2" aria-pressed="false">×2</button>
+            <button type="button" data-speed="4" aria-pressed="false">×4</button>
+          </div>
+        <div class="stage-ctl">
+          <button class="icon-btn" id="zoomBtn" type="button" aria-pressed="false" aria-label="تكبير على القلب" title="تكبير على القلب" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21M10.5 7.5v6M7.5 10.5h6"/></svg>
+          </button>
+          <button class="icon-btn" id="soundBtn" type="button" aria-pressed="false" aria-label="صوت النبض" title="صوت النبض">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path d="M15.5 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>
+          </button>
+        </div>
+        </div>
+        <div class="stage-chip" id="stageChip" aria-hidden="true"></div>
+        <button class="btn primary stage-next" id="stageNext" type="button" hidden>الخطوة التالية ←</button>
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      </div>
+      <div class="tray" id="tray" aria-label="صينية الأدوات"></div>
+    </div>
+
+    <div class="col-b">
+      <section class="card" id="card"></section>
+
+      <section class="panel kymo">
+        <div class="panel-h"><h2>مخطط الانقباضات</h2><span class="muted">كل خط رأسي = ثانية واحدة</span></div>
+        <canvas id="kymo" aria-label="مخطط يرسم انقباضات القلب مع الزمن"></canvas>
+        <div class="legend">
+          <span><i style="background:var(--trace)"></i>انقباض البطين</span>
+          <span><i style="background:var(--adr)"></i>أدرينالين</span>
+          <span><i style="background:var(--ach)"></i>أستيل كولين</span>
+          <span><i style="background:var(--ringer)"></i>رنكر</span>
+          <span><i style="background:var(--glove-soft);height:9px"></i>دقيقة العدّ</span>
+        </div>
+      </section>
+
+      <section class="panel notebook">
+        <div class="panel-h"><h2>دفتر المختبر</h2><span class="muted">عدد الضربات في الدقيقة الواحدة</span></div>
+        <div class="tbl-wrap"><table>
+          <thead><tr><th>الحالة</th><th>ضربة / دقيقة</th><th>الفرق عن الطبيعي</th></tr></thead>
+          <tbody id="nbBody"></tbody>
+        </table></div>
+        <details>
+          <summary>المواد المستخدمة</summary>
+          <ul>
+            <li>محلول رنكر</li><li>عقار الأدرينالين</li><li>عقار الأستيل كولين</li><li>كحول وقطن</li>
+            <li>عدة التشريح</li><li>لوح التشريح</li><li>دبابيس للتثبيت</li><li>الضفدع</li>
+          </ul>
+        </details>
+        <details>
+          <summary>تعديل قيم المحاكاة</summary>
+          <div class="vals">
+            <label for="vBase">الطبيعي<input id="vBase" type="number" min="20" max="140" inputmode="numeric"></label>
+            <label for="vAdr">مع الأدرينالين<input id="vAdr" type="number" min="20" max="160" inputmode="numeric"></label>
+            <label for="vAch">مع الأستيل كولين<input id="vAch" type="number" min="10" max="140" inputmode="numeric"></label>
+          </div>
+          <p class="note" id="valsNote">القيم الافتراضية: 70 في الحالة الطبيعية و50 مع الأستيل كولين حسب نتيجة مختبرك، و80 مع الأدرينالين (زيادة 10 ضربات كما في استنتاج المحاضرة). غيّرها لتطابق نتائجك وستُطبَّق على الإضافات القادمة.</p>
+        </details>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
