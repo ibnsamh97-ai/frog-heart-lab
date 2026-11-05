@@ -170,7 +170,7 @@
       lbl[ch] = V.label('سلسلة ' + CH[ch].name, [c.x, c.y, c.z], dimers[CH[ch].grp]);
     });
     const sA = sites.A;
-    const hl = V.label('هيم وذرة حديد', [sA.fe.x + sA.dir.x * 0.75, sA.fe.y + 0.35, sA.fe.z + sA.dir.z * 0.75], dimers[0]);
+    const hl = V.label('هيم وذرة حديد', [sA.fe.x + sA.dir.x * 0.6, sA.fe.y - 0.5, sA.fe.z + sA.dir.z * 0.6 + 0.3], dimers[0]);
     void hl;
     const badge = V.badge(), info = V.info();
     let infoTimer = 0;

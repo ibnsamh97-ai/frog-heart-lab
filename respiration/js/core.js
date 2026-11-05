@@ -105,19 +105,21 @@
   /* HiDPI canvas */
   L.canvas = function (cv, onResize) {
     const ctx = cv.getContext('2d');
-    const st = { ctx, w: 0, h: 0, dpr: 1 };
+    // الارتفاع بوحدات CSS يُقرأ مرة واحدة فقط؛ لأن تغيير cv.height يغيّر خاصية height نفسها
+    if (!cv.dataset.h) cv.dataset.h = cv.getAttribute('height') || '200';
+    const H = +cv.dataset.h;
+    const st = { ctx, w: 0, h: H, dpr: 1 };
+    cv.style.height = H + 'px';
     function resize(init) {
       const r = cv.getBoundingClientRect();
-      st.dpr = Math.min(2, window.devicePixelRatio || 1);
-      st.w = Math.max(10, r.width);
-      st.h = +cv.getAttribute('height') || r.height;
-      cv.style.height = st.h + 'px';
-      cv.width = Math.round(st.w * st.dpr);
-      cv.height = Math.round(st.h * st.dpr);
-      ctx.setTransform(st.dpr, 0, 0, st.dpr, 0, 0);
+      const dpr = Math.min(2, window.devicePixelRatio || 1), w = Math.max(10, Math.round(r.width));
+      if (w === st.w && dpr === st.dpr && init !== true && cv.width === Math.round(w * dpr)) return;
+      st.dpr = dpr; st.w = w; st.h = H;
+      cv.width = Math.round(w * dpr);
+      cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       if (onResize && init !== true) onResize();
     }
-    st.h = +cv.getAttribute('height') || 200;
     if ('ResizeObserver' in window) new ResizeObserver(() => resize()).observe(cv); else window.addEventListener('resize', () => resize());
     resize(true);
     st.resize = resize;

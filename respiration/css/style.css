@@ -106,8 +106,10 @@ main{min-width:0;padding-block:8px 60px}
 /* ---------- 3D viewer ---------- */
 .viewer{position:relative;width:100%;max-width:100%;aspect-ratio:1/1;border-radius:20px;overflow:hidden;background:radial-gradient(115% 85% at 50% 32%,#353c4a 0%,#1d222b 52%,#0f1217 100%);border:1px solid var(--line);touch-action:pan-y}
 .viewer.wide{aspect-ratio:4/3}
-.viewer canvas{display:block;width:100%!important;height:100%!important;cursor:grab}
-.viewer canvas:active{cursor:grabbing}
+.viewer canvas.v-gl,.viewer canvas.v-snap{position:absolute;inset:0;display:block;width:100%!important;height:100%!important}
+.viewer canvas.v-snap[hidden]{display:none}
+.v-hit{position:absolute;inset:0;cursor:grab}
+.v-hit:active{cursor:grabbing}
 .v-ctl{position:absolute;inset:auto 10px 10px 10px;display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start;pointer-events:none}
 .v-ctl > *{pointer-events:auto}
 .v-badge{position:absolute;top:12px;right:12px;font-size:12px;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line);color:var(--ink-2)}
@@ -283,3 +285,4 @@ footer .in{max-width:1360px;margin:0 auto;padding-left:max(16px,env(safe-area-in
 @media (prefers-reduced-motion: reduce){.pulse,.flow{animation:none}}
 @media (max-width:600px){.top-sec{display:none}.font-btn{margin-inline-start:auto}.brand b{font-size:16px}}
 @media (max-width:600px){.chip-btn{font-size:11.5px;padding:5px 9px}.v-ctl{gap:5px;inset:auto 8px 8px 8px}.v-label{font-size:11px;padding:1px 7px}.v-info{max-width:78%;font-size:12.5px}}
+@media (pointer: coarse){.topbar{backdrop-filter:none;-webkit-backdrop-filter:none;background:var(--surface)}}

@@ -72,7 +72,7 @@
       }
       return d;
     };
-    const wallG = K.surfaceNets(sdf, bmin, bmax, 0.03, { coarse: 3, smooth: 1 });
+    const wallG = K.surfaceNets(sdf, bmin, bmax, K.lite ? 0.04 : 0.032, { coarse: 3, smooth: 1 });
     const clip = new THREE.Plane(new THREE.Vector3(0, 0, -1), 10);
     const wallMat = K.tissue({ a: 0xe48d98, b: 0xcf6f80, edge: 0xb35a6e, cell: 16, noise: 4, bump: 0.004, edgeW: 0.1, edgeAmt: 0.18, rim: 0xffb3bd, rimAmt: 0.45, clearcoat: 0.55, ccr: 0.2, roughness: 0.45, side: THREE.DoubleSide, transparent: true, opacity: 0.92, env: 0.5 });
     wallMat.clippingPlanes = [clip]; wallMat.clipShadows = true;
@@ -117,7 +117,7 @@
         const curve = new THREE.CatmullRomCurve3(arc);
         const gx = lab.clamp((al.c.x + 1.5) / 3.0, 0, 1);
         const ta = lab.clamp(gx * 0.7 + (a.dot(flow) * 0.5 + 0.5) * 0.3, 0, 1), tb2 = lab.clamp(gx * 0.7 + (b.dot(flow) * 0.5 + 0.5) * 0.3, 0, 1);
-        capGeos.push(K.tube(curve, 8, 0.02, 0.02, 6, mix3(BLUE, RED, ta), mix3(BLUE, RED, tb2)));
+        capGeos.push(K.tube(curve, 6, 0.02, 0.02, 5, mix3(BLUE, RED, ta), mix3(BLUE, RED, tb2)));
         paths.push({ curve, t0: ta, t1: tb2 });
       });
       void ai;

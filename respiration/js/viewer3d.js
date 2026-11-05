@@ -68,65 +68,70 @@
     const id = (i, j, k) => i + nx * (j + ny * k);
     const cx = nx - 1, cy = ny - 1, cz = nz - 1;
     const cell = new Int32Array(cx * cy * cz).fill(-1);
-    const CO = [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0], [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]];
-    const ED = [[0, 1], [2, 3], [4, 5], [6, 7], [0, 2], [1, 3], [4, 6], [5, 7], [0, 4], [1, 5], [2, 6], [3, 7]];
-    const v = new Float32Array(8), pos = [];
-    let vc = 0;
+    const CO = [0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1];
+    const ED = [0, 1, 2, 3, 4, 5, 6, 7, 0, 2, 1, 3, 4, 6, 5, 7, 0, 4, 1, 5, 2, 6, 3, 7];
+    const v = new Float32Array(8);
+    // مصفوفات ثابتة النوع تنمو عند الحاجة (ذاكرة أقل بكثير على الموبايل)
+    let P = new Float32Array(3 * 8192), vc = 0;
     for (let k = 0; k < cz; k++) for (let j = 0; j < cy; j++) for (let i = 0; i < cx; i++) {
       let mask = 0;
-      for (let c = 0; c < 8; c++) { v[c] = F[id(i + CO[c][0], j + CO[c][1], k + CO[c][2])]; if (v[c] < 0) mask |= 1 << c; }
+      for (let c = 0; c < 8; c++) { v[c] = F[id(i + CO[c * 3], j + CO[c * 3 + 1], k + CO[c * 3 + 2])]; if (v[c] < 0) mask |= 1 << c; }
       if (mask === 0 || mask === 255) continue;
       let sx = 0, sy = 0, sz = 0, n = 0;
       for (let e = 0; e < 12; e++) {
-        const a = ED[e][0], b = ED[e][1];
+        const a = ED[e * 2], b = ED[e * 2 + 1];
         if ((v[a] < 0) === (v[b] < 0)) continue;
         const t = v[a] / (v[a] - v[b]);
-        sx += CO[a][0] + t * (CO[b][0] - CO[a][0]); sy += CO[a][1] + t * (CO[b][1] - CO[a][1]); sz += CO[a][2] + t * (CO[b][2] - CO[a][2]); n++;
+        sx += CO[a * 3] + t * (CO[b * 3] - CO[a * 3]); sy += CO[a * 3 + 1] + t * (CO[b * 3 + 1] - CO[a * 3 + 1]); sz += CO[a * 3 + 2] + t * (CO[b * 3 + 2] - CO[a * 3 + 2]); n++;
       }
-      pos.push(bmin[0] + (i + sx / n) * step, bmin[1] + (j + sy / n) * step, bmin[2] + (k + sz / n) * step);
+      if (vc * 3 + 3 > P.length) { const Q = new Float32Array(P.length * 2); Q.set(P); P = Q; }
+      P[vc * 3] = bmin[0] + (i + sx / n) * step; P[vc * 3 + 1] = bmin[1] + (j + sy / n) * step; P[vc * 3 + 2] = bmin[2] + (k + sz / n) * step;
       cell[i + cx * (j + cy * k)] = vc++;
     }
     const C = (i, j, k) => cell[i + cx * (j + cy * k)];
-    const ind = [];
+    let I = new Uint32Array(6 * 8192), ic = 0;
     const quad = (a, b, c, d, inside, ax) => {
       if (a < 0 || b < 0 || c < 0 || d < 0) return;
-      // اتجاه الوجه: يخرج من الداخل إلى الخارج
-      const ux = pos[b * 3] - pos[a * 3], uy = pos[b * 3 + 1] - pos[a * 3 + 1], uz = pos[b * 3 + 2] - pos[a * 3 + 2];
-      const wx = pos[c * 3] - pos[a * 3], wy = pos[c * 3 + 1] - pos[a * 3 + 1], wz = pos[c * 3 + 2] - pos[a * 3 + 2];
+      const ux = P[b * 3] - P[a * 3], uy = P[b * 3 + 1] - P[a * 3 + 1], uz = P[b * 3 + 2] - P[a * 3 + 2];
+      const wx = P[c * 3] - P[a * 3], wy = P[c * 3 + 1] - P[a * 3 + 1], wz = P[c * 3 + 2] - P[a * 3 + 2];
       const nn = ax === 0 ? uy * wz - uz * wy : ax === 1 ? uz * wx - ux * wz : ux * wy - uy * wx;
-      if ((nn > 0) === inside) ind.push(a, b, c, a, c, d); else ind.push(a, c, b, a, d, c);
+      if (ic + 6 > I.length) { const Q = new Uint32Array(I.length * 2); Q.set(I); I = Q; }
+      if ((nn > 0) === inside) { I[ic++] = a; I[ic++] = b; I[ic++] = c; I[ic++] = a; I[ic++] = c; I[ic++] = d; }
+      else { I[ic++] = a; I[ic++] = c; I[ic++] = b; I[ic++] = a; I[ic++] = d; I[ic++] = c; }
     };
     for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
       const a = F[id(i, j, k)] < 0;
-      if (i < cx && j > 0 && k > 0 && j < ny && k < nz && (F[id(i + 1, j, k)] < 0) !== a) quad(C(i, j - 1, k - 1), C(i, j, k - 1), C(i, j, k), C(i, j - 1, k), a, 0);
+      if (i < cx && j > 0 && k > 0 && (F[id(i + 1, j, k)] < 0) !== a) quad(C(i, j - 1, k - 1), C(i, j, k - 1), C(i, j, k), C(i, j - 1, k), a, 0);
       if (j < cy && i > 0 && k > 0 && (F[id(i, j + 1, k)] < 0) !== a) quad(C(i - 1, j, k - 1), C(i - 1, j, k), C(i, j, k), C(i, j, k - 1), a, 1);
       if (k < cz && i > 0 && j > 0 && (F[id(i, j, k + 1)] < 0) !== a) quad(C(i - 1, j - 1, k), C(i, j - 1, k), C(i, j, k), C(i - 1, j, k), a, 2);
     }
-    // تنعيم خفيف للسطح ثم حساب الاتجاهات من تدرج الدالة
-    const P = new Float32Array(pos);
+    P = P.slice(0, vc * 3); I = I.slice(0, ic);
+    // تنعيم خفيف: متوسط الجيران عبر أضلاع المثلثات
     const smooth = opt && opt.smooth !== undefined ? opt.smooth : 1;
-    if (smooth) {
-      const nb = Array.from({ length: vc }, () => []);
-      for (let t = 0; t < ind.length; t += 3) { const a = ind[t], b = ind[t + 1], c = ind[t + 2]; nb[a].push(b, c); nb[b].push(a, c); nb[c].push(a, b); }
+    if (smooth && vc) {
+      const sum = new Float32Array(vc * 3), cnt = new Uint16Array(vc);
       for (let it = 0; it < smooth; it++) {
-        const Q = P.slice();
-        for (let vI = 0; vI < vc; vI++) {
-          const L = nb[vI]; if (!L.length) continue;
-          let x = 0, y = 0, z = 0; for (const u of L) { x += Q[u * 3]; y += Q[u * 3 + 1]; z += Q[u * 3 + 2]; }
-          const m = 0.5 / L.length; P[vI * 3] = Q[vI * 3] * 0.5 + x * m; P[vI * 3 + 1] = Q[vI * 3 + 1] * 0.5 + y * m; P[vI * 3 + 2] = Q[vI * 3 + 2] * 0.5 + z * m;
+        sum.fill(0); cnt.fill(0);
+        for (let t = 0; t < ic; t += 3) {
+          const A = I[t], B = I[t + 1], Cc = I[t + 2];
+          for (let q2 = 0; q2 < 3; q2++) {
+            sum[A * 3 + q2] += P[B * 3 + q2] + P[Cc * 3 + q2]; sum[B * 3 + q2] += P[A * 3 + q2] + P[Cc * 3 + q2]; sum[Cc * 3 + q2] += P[A * 3 + q2] + P[B * 3 + q2];
+          }
+          cnt[A] += 2; cnt[B] += 2; cnt[Cc] += 2;
         }
+        for (let vI = 0; vI < vc; vI++) if (cnt[vI]) for (let q2 = 0; q2 < 3; q2++) P[vI * 3 + q2] = P[vI * 3 + q2] * 0.5 + (sum[vI * 3 + q2] / cnt[vI]) * 0.5;
       }
     }
     const N = new Float32Array(vc * 3), h = step * 0.5;
     for (let vI = 0; vI < vc; vI++) {
       const x = P[vI * 3], y = P[vI * 3 + 1], z = P[vI * 3 + 2];
-      let gx = sdf(x + h, y, z) - sdf(x - h, y, z), gy = sdf(x, y + h, z) - sdf(x, y - h, z), gz = sdf(x, y, z + h) - sdf(x, y, z - h);
+      const gx = sdf(x + h, y, z) - sdf(x - h, y, z), gy = sdf(x, y + h, z) - sdf(x, y - h, z), gz = sdf(x, y, z + h) - sdf(x, y, z - h);
       const l = Math.hypot(gx, gy, gz) || 1; N[vI * 3] = gx / l; N[vI * 3 + 1] = gy / l; N[vI * 3 + 2] = gz / l;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute('position', new THREE.BufferAttribute(P, 3));
     g.setAttribute('normal', new THREE.BufferAttribute(N, 3));
-    g.setIndex(vc > 65535 ? new THREE.Uint32BufferAttribute(ind, 1) : new THREE.Uint16BufferAttribute(ind, 1));
+    g.setIndex(new THREE.BufferAttribute(vc > 65535 ? I : new Uint16Array(I), 1));
     g.computeBoundingSphere();
     return g;
   };
@@ -286,7 +291,58 @@ ${GLSL_NOISE}`)
     return m;
   };
 
-  /* ---------- العارض ---------- */
+  /* ---------- العارض ----------
+     سياق WebGL واحد مشترك لكل المجسمات: لوحة الرسم تنتقل إلى المجسم الظاهر،
+     والمجسم الآخر يُعرض كصورة ثابتة. هذا يوفّر الذاكرة ويمنع انهيار الصفحة على الموبايل. */
+  const LITE = (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || Math.min(screen.width || 9999, screen.height || 9999) < 760;
+  K.lite = LITE;
+  const SH = { R: null, env: null, owner: null, list: [] };
+  function sharedRenderer() {
+    if (SH.R) return SH.R;
+    const THREE = T();
+    const R = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: LITE ? 'default' : 'high-performance' });
+    R.setPixelRatio(Math.min(LITE ? 1.5 : 2, window.devicePixelRatio || 1));
+    R.outputEncoding = THREE.sRGBEncoding;
+    R.toneMapping = THREE.ACESFilmicToneMapping;
+    R.localClippingEnabled = true;
+    R.shadowMap.enabled = !LITE; R.shadowMap.type = THREE.PCFSoftShadowMap;
+    R.domElement.className = 'v-gl';
+    R.domElement.addEventListener('webglcontextlost', e => { e.preventDefault(); SH.lost = true; }, false);
+    R.domElement.addEventListener('webglcontextrestored', () => { SH.lost = false; }, false);
+    if (THREE.RoomEnvironment) {
+      try { const pm = new THREE.PMREMGenerator(R); SH.env = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture; pm.dispose(); } catch (e) {}
+    }
+    SH.R = R;
+    return R;
+  }
+  function claim(V) {
+    const R = SH.R, prev = SH.owner;
+    if (prev === V) return;
+    if (prev && prev.ratio > 0 && prev._built) {
+      // صورة ثابتة للمجسم السابق قبل نقل لوحة الرسم
+      try {
+        prev.sizeTo();
+        R.toneMappingExposure = prev.exposure; R.render(prev.scene, prev.camera);
+        const c = prev.snap, w = R.domElement.width, h = R.domElement.height;
+        if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
+        c.getContext('2d').clearRect(0, 0, w, h);
+        c.getContext('2d').drawImage(R.domElement, 0, 0);
+        c.hidden = false;
+      } catch (e) {}
+    }
+    SH.owner = V;
+    V.snap.hidden = true;
+    V.el.prepend(R.domElement);
+    V.sizeTo();
+  }
+  function bestViewer() {
+    let best = null;
+    SH.list.forEach(v => { if (v._built && v.ratio > 0 && (!best || v.ratio > best.ratio + 0.001)) best = v; });
+    const cur = SH.owner;
+    if (cur && cur._built && cur.ratio > 0 && best && best !== cur && best.ratio < cur.ratio + 0.2) return cur;
+    return best;
+  }
+
   function Viewer(el, o) {
     this.el = el;
     el.__v = this;
@@ -296,25 +352,25 @@ ${GLSL_NOISE}`)
       return;
     }
     const THREE = T();
-    this.ok = true;
-    const R = (this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' }));
-    R.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
-    R.outputEncoding = THREE.sRGBEncoding;
-    R.toneMapping = THREE.ACESFilmicToneMapping;
-    R.toneMappingExposure = o.exposure || 1.05;
-    R.physicallyCorrectLights = false;
-    if (o.shadows) { R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap; }
-    if (o.clip) R.localClippingEnabled = true;
-    el.prepend(R.domElement);
-    const S = (this.scene = new THREE.Scene());
-    if (THREE.RoomEnvironment) {
-      try { const pm = new THREE.PMREMGenerator(R); S.environment = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture; pm.dispose(); } catch (e) {}
+    let R;
+    try { R = sharedRenderer(); } catch (e) {
+      el.insertAdjacentHTML('beforeend', '<div class="v-fallback">تعذّر تشغيل المجسم ثلاثي الأبعاد في هذا المتصفح.</div>');
+      return;
     }
+    this.ok = true;
+    this.renderer = R;
+    this.exposure = o.exposure || 1.05;
+    this.lite = LITE;
+    const S = (this.scene = new THREE.Scene());
+    if (SH.env) S.environment = SH.env;
     this.camera = new THREE.PerspectiveCamera(o.fov || 32, 1, 0.05, 200);
     this.camera.position.set(o.cam[0], o.cam[1], o.cam[2]);
     const tg = o.target || [0, 0, 0];
+    // طبقة اللمس: التدوير والاختيار عليها، تحت الأسماء والأزرار
+    this.snap = document.createElement('canvas'); this.snap.className = 'v-snap'; this.snap.hidden = true; el.prepend(this.snap);
+    const hit = (this.hitEl = document.createElement('div')); hit.className = 'v-hit'; el.appendChild(hit);
     if (THREE.OrbitControls) {
-      const c = (this.controls = new THREE.OrbitControls(this.camera, R.domElement));
+      const c = (this.controls = new THREE.OrbitControls(this.camera, hit));
       c.enableDamping = true; c.dampingFactor = 0.08; c.enablePan = false; c.rotateSpeed = 0.8;
       c.minDistance = o.minD || 3; c.maxDistance = o.maxD || 14;
       c.target.set(tg[0], tg[1], tg[2]);
@@ -322,13 +378,13 @@ ${GLSL_NOISE}`)
       let tm = 0;
       c.addEventListener('start', () => { c.autoRotate = false; clearTimeout(tm); });
       c.addEventListener('end', () => { clearTimeout(tm); tm = setTimeout(() => (c.autoRotate = !lab.reduce && o.spin !== 0), 8000); });
-      R.domElement.style.touchAction = 'pan-y';
+      hit.style.touchAction = 'pan-y';
     } else this.camera.lookAt(tg[0], tg[1], tg[2]);
     // إضاءة استوديو: مفتاحية بظل، تعبئة، وحافة خلفية
     S.add(new THREE.HemisphereLight(0xfff4ec, 0x40363a, o.hemi !== undefined ? o.hemi : 0.35));
     const key = (this.key = new THREE.DirectionalLight(0xfff1e6, o.keyI || 1.55));
     key.position.set(3.5, 6, 5.5);
-    if (o.shadows) {
+    if (o.shadows && !LITE) {
       key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0006; key.shadow.normalBias = 0.025; key.shadow.radius = 4;
       const sc = key.shadow.camera, s = o.shadowSize || 4; sc.left = -s; sc.right = s; sc.top = s; sc.bottom = -s; sc.near = 0.5; sc.far = 25;
     }
@@ -337,25 +393,27 @@ ${GLSL_NOISE}`)
     const fill = new THREE.DirectionalLight(0xffe0d6, 0.35); fill.position.set(-5, -1, 3); S.add(fill);
     this.labelBox = document.createElement('div'); this.labelBox.className = 'v-labels'; el.appendChild(this.labelBox);
     this.labels = []; this.showLabels = true;
-    const resize = () => {
+    this.sizeTo = () => {
       const w = el.clientWidth, h = el.clientHeight;
       if (!w || !h) return;
-      R.setSize(w, h, false);
-      this.camera.aspect = w / h;
-      if (o.fitW) { const need = o.fitW / (2 * Math.tan((this.camera.fov * Math.PI) / 360) * this.camera.aspect); this.camera.zoom = Math.min(1, (this.camera.position.distanceTo(new THREE.Vector3(...tg)) / need)); }
-      this.camera.updateProjectionMatrix();
+      if (SH.owner === this) { const cs = R.getSize(new THREE.Vector2()); if (cs.x !== w || cs.y !== h) R.setSize(w, h, false); }
+      if (this.camera.aspect !== w / h) { this.camera.aspect = w / h; this.camera.updateProjectionMatrix(); }
     };
-    if ('ResizeObserver' in window) new ResizeObserver(resize).observe(el); else window.addEventListener('resize', resize);
-    resize();
+    if ('ResizeObserver' in window) new ResizeObserver(() => this.sizeTo()).observe(el); else window.addEventListener('resize', () => this.sizeTo());
+    this.sizeTo();
+    this.ratio = 0;
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => { es.forEach(e => (this.ratio = e.isIntersecting ? e.intersectionRatio || 0.01 : 0)); }, { threshold: [0, 0.1, 0.25, 0.4, 0.55, 0.7, 0.85, 1] }).observe(el);
+    else this.ratio = 1;
+    SH.list.push(this);
     this.pickables = []; this.onPick = null;
     let down = null;
-    R.domElement.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
-    R.domElement.addEventListener('pointerup', e => {
+    hit.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
+    hit.addEventListener('pointerup', e => {
       if (!down) return;
       const dx = e.clientX - down[0], dy = e.clientY - down[1];
       down = null;
       if (dx * dx + dy * dy > 49 || !this.onPick) return;
-      const rect = R.domElement.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
       const v = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
       const rc = new THREE.Raycaster();
       rc.setFromCamera(v, this.camera);
@@ -365,9 +423,12 @@ ${GLSL_NOISE}`)
     this.frame = null;
     this._v = new THREE.Vector3();
     lab.loop(el, (dt, t) => {
-      if (this.hold || (lab.navigating && Date.now() - lab.navigating < 700)) return;
+      if (this.hold || SH.lost || (lab.navigating && Date.now() - lab.navigating < 700)) return;
+      if (bestViewer() !== this) return;
+      claim(this);
       if (this.frame) this.frame(dt, t);
       if (this.controls) this.controls.update();
+      R.toneMappingExposure = this.exposure;
       R.render(S, this.camera);
       this.updateLabels();
     });
@@ -426,13 +487,22 @@ ${GLSL_NOISE}`)
   };
   K.Viewer = Viewer;
 
-  /* بناء مؤجل: لا يُبنى المجسم إلا عند اقتراب القسم من الشاشة */
+  /* بناء مؤجل: لا يُبنى المجسم إلا عند اقتراب القسم من الشاشة، ومجسم واحد في كل مرة */
+  let queue = Promise.resolve();
   K.lazy = function (el, build) {
     if (!el) return;
     let done = false;
-    const go = () => { if (done) return; done = true; setTimeout(async () => { const t0 = performance.now(); try { await build(el); } catch (e) { console.error(e); } if (window.__k3debug) console.info('k3 build ' + el.id + ' ' + Math.round(performance.now() - t0) + 'ms'); }, 30); };
+    const go = () => {
+      if (done) return; done = true;
+      queue = queue.then(() => new Promise(res => setTimeout(async () => {
+        const t0 = performance.now();
+        try { await build(el); } catch (e) { console.error(e); }
+        if (window.__k3debug) console.info('k3 build ' + el.id + ' ' + Math.round(performance.now() - t0) + 'ms');
+        res();
+      }, 30)));
+    };
     if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: '700px 0px' });
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: (LITE ? '150px' : '500px') + ' 0px' });
       io.observe(el);
     } else go();
   };

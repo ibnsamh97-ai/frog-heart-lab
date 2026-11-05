@@ -87,7 +87,7 @@
       const f = lungSDF(K, side, heart);
       lungSdf[side] = f;
       const bx = side < 0 ? [-2.25, -0.06] : [0.06, 2.25];
-      const g = K.surfaceNets(f, [bx[0], -2.05, -1.62], [bx[1], 2.0, 1.4], 0.034, { coarse: 3, smooth: 1 });
+      const g = K.surfaceNets(f, [bx[0], -2.05, -1.62], [bx[1], 2.0, 1.4], K.lite ? 0.042 : 0.034, { coarse: 3, smooth: 1 });
       const p = g.attributes.position, lob = new Float32Array(p.count);
       for (let i = 0; i < p.count; i++) lob[i] = lobeOf(side, p.getX(i), p.getY(i), p.getZ(i));
       g.setAttribute('lobe', new THREE.BufferAttribute(lob, 1));
@@ -105,7 +105,7 @@
 
     /* ===== القلب ===== */
     await tick();
-    const hg = K.surfaceNets(heart, [-0.95, -1.42, -0.78], [1.32, 0.12, 1.08], 0.03, { coarse: 3, smooth: 1 });
+    const hg = K.surfaceNets(heart, [-0.95, -1.42, -0.78], [1.32, 0.12, 1.08], K.lite ? 0.036 : 0.03, { coarse: 3, smooth: 1 });
     {
       // دهون صفراء في الأخدودين التاجي وبين البطينين
       const p = hg.attributes.position, col = new Float32Array(p.count * 3);
