@@ -171,6 +171,31 @@
       scrim = document.createElement('div'); scrim.className = 'scrim'; scrim.addEventListener('click', close); document.body.appendChild(scrim);
     });
     L.$$('a', toc).forEach(a => a.addEventListener('click', close));
+    /* التنقل داخل الصفحة بالسكربت: يعمل داخل الإطارات ومع تغيّر ارتفاع المحتوى أثناء التمرير */
+    function go(id) {
+      const el = document.getElementById(id); if (!el) return;
+      const bar = L.$('.topbar'), off = (bar ? bar.offsetHeight : 60) + 12;
+      const target = () => (id === 'top' ? 0 : Math.max(0, el.getBoundingClientRect().top + window.scrollY - off));
+      const far = Math.abs(target() - window.scrollY) > window.innerHeight * 2.5;
+      L.navigating = Date.now();
+      window.scrollTo({ top: target(), behavior: L.reduce || far ? 'auto' : 'smooth' });
+      let tries = 0;
+      const fix = () => {
+        const d = target() - window.scrollY;
+        if (Math.abs(d) > 6 && tries++ < 5) window.scrollTo({ top: target(), behavior: 'auto' });
+        if (tries < 5) setTimeout(fix, 450);
+      };
+      setTimeout(fix, far ? 120 : 800);
+      try { history.replaceState(null, '', '#' + id); } catch (e) {}
+    }
+    L.go = go;
+    document.addEventListener('click', e => {
+      const a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const id = a.getAttribute('href').slice(1);
+      if (!id || !document.getElementById(id)) return;
+      e.preventDefault(); close(); go(id);
+    });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
     const links = new Map(L.$$('a', toc).map(a => [a.getAttribute('href').slice(1), a]));
     const secs = L.$$('main .sec');

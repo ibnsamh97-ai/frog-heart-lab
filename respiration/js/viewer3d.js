@@ -1,32 +1,138 @@
-/* المجسمات ثلاثية الأبعاد: الرئتان، الأسناخ، الهيموكلوبين (Three.js r128) */
+/* أدوات العرض ثلاثي الأبعاد المشتركة (Three.js r128):
+   إضاءة واقعية (بيئة + ظلال + تدرج لوني سينمائي)، خامة نسيج حي إجرائية، وبناء سطوح عضوية من دوال المسافة */
 (function () {
   'use strict';
   const lab = window.Lab;
   const T = () => window.THREE;
+  const K = (lab.k3 = {});
 
   function webgl() {
-    try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl') || c.getContext('experimental-webgl'))); }
+    try { const c = document.createElement('canvas'); return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl') || c.getContext('experimental-webgl'))); }
     catch (e) { return false; }
   }
+  K.col = hex => new (T().Color)(hex).convertSRGBToLinear();
+  K.rgb = hex => { const c = K.col(hex); return [c.r, c.g, c.b]; };
+  K.v3 = (x, y, z) => new (T().Vector3)(x, y, z);
+  K.breath = p => (p < 0.4 ? lab.ease(p / 0.4) : 1 - lab.ease((p - 0.4) / 0.6));
 
-  /* ---------- geometry helpers ---------- */
-  function smoothSeams(g) {
-    g.computeVertexNormals();
-    const p = g.attributes.position, n = g.attributes.normal, map = new Map();
-    for (let i = 0; i < p.count; i++) {
-      const key = Math.round(p.getX(i) * 1e4) + ',' + Math.round(p.getY(i) * 1e4) + ',' + Math.round(p.getZ(i) * 1e4);
-      let e = map.get(key);
-      if (!e) { e = { x: 0, y: 0, z: 0, ids: [] }; map.set(key, e); }
-      e.x += n.getX(i); e.y += n.getY(i); e.z += n.getZ(i); e.ids.push(i);
+  /* ---------- دوال المسافة ---------- */
+  const S = (K.sdf = {});
+  S.ellipsoid = (x, y, z, rx, ry, rz) => {
+    const k0 = Math.sqrt((x / rx) ** 2 + (y / ry) ** 2 + (z / rz) ** 2);
+    const k1 = Math.sqrt((x / (rx * rx)) ** 2 + (y / (ry * ry)) ** 2 + (z / (rz * rz)) ** 2) || 1e-6;
+    return (k0 * (k0 - 1)) / k1;
+  };
+  S.sphere = (x, y, z, r) => Math.sqrt(x * x + y * y + z * z) - r;
+  S.capsule = (px, py, pz, ax, ay, az, bx, by, bz, r) => {
+    const pax = px - ax, pay = py - ay, paz = pz - az, bax = bx - ax, bay = by - ay, baz = bz - az;
+    const h = Math.max(0, Math.min(1, (pax * bax + pay * bay + paz * baz) / (bax * bax + bay * bay + baz * baz)));
+    return Math.sqrt((pax - bax * h) ** 2 + (pay - bay * h) ** 2 + (paz - baz * h) ** 2) - r;
+  };
+  S.smin = (a, b, k) => { const h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25; };
+  S.smax = (a, b, k) => -S.smin(-a, -b, k);
+  S.ss = (e0, e1, x) => { const t = Math.max(0, Math.min(1, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
+
+  /* ---------- سطح من دالة مسافة (Surface Nets) ---------- */
+  K.surfaceNets = function (sdf, bmin, bmax, step, opt) {
+    const THREE = T();
+    const nx = Math.ceil((bmax[0] - bmin[0]) / step) + 1, ny = Math.ceil((bmax[1] - bmin[1]) / step) + 1, nz = Math.ceil((bmax[2] - bmin[2]) / step) + 1;
+    const F = new Float32Array(nx * ny * nz);
+    let q = 0;
+    const cf = (opt && opt.coarse) || 0;
+    if (cf > 1) {
+      // شبكة خشنة أولاً، ثم لا تُحسب الدالة بدقة إلا قرب السطح
+      const cs = step * cf, mx = Math.ceil((nx - 1) / cf) + 1, my = Math.ceil((ny - 1) / cf) + 1, mz = Math.ceil((nz - 1) / cf) + 1;
+      const Fc = new Float32Array(mx * my * mz);
+      let r = 0;
+      for (let k = 0; k < mz; k++) for (let j = 0; j < my; j++) for (let i = 0; i < mx; i++) Fc[r++] = sdf(bmin[0] + i * cs, bmin[1] + j * cs, bmin[2] + k * cs);
+      const band = cs * 1.9;
+      for (let k = 0; k < nz; k++) {
+        const z = bmin[2] + k * step, ck = Math.round(k / cf);
+        for (let j = 0; j < ny; j++) {
+          const y = bmin[1] + j * step, cj = Math.round(j / cf);
+          for (let i = 0; i < nx; i++) {
+            const dc = Fc[Math.round(i / cf) + mx * (cj + my * ck)];
+            F[q++] = Math.abs(dc) > band ? dc : sdf(bmin[0] + i * step, y, z);
+          }
+        }
+      }
+    } else {
+      for (let k = 0; k < nz; k++) {
+        const z = bmin[2] + k * step;
+        for (let j = 0; j < ny; j++) {
+          const y = bmin[1] + j * step;
+          for (let i = 0; i < nx; i++) F[q++] = sdf(bmin[0] + i * step, y, z);
+        }
+      }
     }
-    map.forEach(e => {
-      if (e.ids.length < 2) return;
-      const l = Math.hypot(e.x, e.y, e.z) || 1;
-      e.ids.forEach(i => n.setXYZ(i, e.x / l, e.y / l, e.z / l));
-    });
-    n.needsUpdate = true;
-  }
-  function merge(list) {
+    const id = (i, j, k) => i + nx * (j + ny * k);
+    const cx = nx - 1, cy = ny - 1, cz = nz - 1;
+    const cell = new Int32Array(cx * cy * cz).fill(-1);
+    const CO = [[0, 0, 0], [1, 0, 0], [0, 1, 0], [1, 1, 0], [0, 0, 1], [1, 0, 1], [0, 1, 1], [1, 1, 1]];
+    const ED = [[0, 1], [2, 3], [4, 5], [6, 7], [0, 2], [1, 3], [4, 6], [5, 7], [0, 4], [1, 5], [2, 6], [3, 7]];
+    const v = new Float32Array(8), pos = [];
+    let vc = 0;
+    for (let k = 0; k < cz; k++) for (let j = 0; j < cy; j++) for (let i = 0; i < cx; i++) {
+      let mask = 0;
+      for (let c = 0; c < 8; c++) { v[c] = F[id(i + CO[c][0], j + CO[c][1], k + CO[c][2])]; if (v[c] < 0) mask |= 1 << c; }
+      if (mask === 0 || mask === 255) continue;
+      let sx = 0, sy = 0, sz = 0, n = 0;
+      for (let e = 0; e < 12; e++) {
+        const a = ED[e][0], b = ED[e][1];
+        if ((v[a] < 0) === (v[b] < 0)) continue;
+        const t = v[a] / (v[a] - v[b]);
+        sx += CO[a][0] + t * (CO[b][0] - CO[a][0]); sy += CO[a][1] + t * (CO[b][1] - CO[a][1]); sz += CO[a][2] + t * (CO[b][2] - CO[a][2]); n++;
+      }
+      pos.push(bmin[0] + (i + sx / n) * step, bmin[1] + (j + sy / n) * step, bmin[2] + (k + sz / n) * step);
+      cell[i + cx * (j + cy * k)] = vc++;
+    }
+    const C = (i, j, k) => cell[i + cx * (j + cy * k)];
+    const ind = [];
+    const quad = (a, b, c, d, inside, ax) => {
+      if (a < 0 || b < 0 || c < 0 || d < 0) return;
+      // اتجاه الوجه: يخرج من الداخل إلى الخارج
+      const ux = pos[b * 3] - pos[a * 3], uy = pos[b * 3 + 1] - pos[a * 3 + 1], uz = pos[b * 3 + 2] - pos[a * 3 + 2];
+      const wx = pos[c * 3] - pos[a * 3], wy = pos[c * 3 + 1] - pos[a * 3 + 1], wz = pos[c * 3 + 2] - pos[a * 3 + 2];
+      const nn = ax === 0 ? uy * wz - uz * wy : ax === 1 ? uz * wx - ux * wz : ux * wy - uy * wx;
+      if ((nn > 0) === inside) ind.push(a, b, c, a, c, d); else ind.push(a, c, b, a, d, c);
+    };
+    for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const a = F[id(i, j, k)] < 0;
+      if (i < cx && j > 0 && k > 0 && j < ny && k < nz && (F[id(i + 1, j, k)] < 0) !== a) quad(C(i, j - 1, k - 1), C(i, j, k - 1), C(i, j, k), C(i, j - 1, k), a, 0);
+      if (j < cy && i > 0 && k > 0 && (F[id(i, j + 1, k)] < 0) !== a) quad(C(i - 1, j, k - 1), C(i - 1, j, k), C(i, j, k), C(i, j, k - 1), a, 1);
+      if (k < cz && i > 0 && j > 0 && (F[id(i, j, k + 1)] < 0) !== a) quad(C(i - 1, j - 1, k), C(i, j - 1, k), C(i, j, k), C(i - 1, j, k), a, 2);
+    }
+    // تنعيم خفيف للسطح ثم حساب الاتجاهات من تدرج الدالة
+    const P = new Float32Array(pos);
+    const smooth = opt && opt.smooth !== undefined ? opt.smooth : 1;
+    if (smooth) {
+      const nb = Array.from({ length: vc }, () => []);
+      for (let t = 0; t < ind.length; t += 3) { const a = ind[t], b = ind[t + 1], c = ind[t + 2]; nb[a].push(b, c); nb[b].push(a, c); nb[c].push(a, b); }
+      for (let it = 0; it < smooth; it++) {
+        const Q = P.slice();
+        for (let vI = 0; vI < vc; vI++) {
+          const L = nb[vI]; if (!L.length) continue;
+          let x = 0, y = 0, z = 0; for (const u of L) { x += Q[u * 3]; y += Q[u * 3 + 1]; z += Q[u * 3 + 2]; }
+          const m = 0.5 / L.length; P[vI * 3] = Q[vI * 3] * 0.5 + x * m; P[vI * 3 + 1] = Q[vI * 3 + 1] * 0.5 + y * m; P[vI * 3 + 2] = Q[vI * 3 + 2] * 0.5 + z * m;
+        }
+      }
+    }
+    const N = new Float32Array(vc * 3), h = step * 0.5;
+    for (let vI = 0; vI < vc; vI++) {
+      const x = P[vI * 3], y = P[vI * 3 + 1], z = P[vI * 3 + 2];
+      let gx = sdf(x + h, y, z) - sdf(x - h, y, z), gy = sdf(x, y + h, z) - sdf(x, y - h, z), gz = sdf(x, y, z + h) - sdf(x, y, z - h);
+      const l = Math.hypot(gx, gy, gz) || 1; N[vI * 3] = gx / l; N[vI * 3 + 1] = gy / l; N[vI * 3 + 2] = gz / l;
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(P, 3));
+    g.setAttribute('normal', new THREE.BufferAttribute(N, 3));
+    g.setIndex(vc > 65535 ? new THREE.Uint32BufferAttribute(ind, 1) : new THREE.Uint16BufferAttribute(ind, 1));
+    g.computeBoundingSphere();
+    return g;
+  };
+
+  /* ---------- دمج أشكال ---------- */
+  K.merge = function (list) {
     const THREE = T();
     let vc = 0, ic = 0;
     const hasCol = list.some(g => g.attributes.color);
@@ -34,9 +140,10 @@
     const pos = new Float32Array(vc * 3), nor = new Float32Array(vc * 3), col = hasCol ? new Float32Array(vc * 3) : null, idx = new Uint32Array(ic);
     let vo = 0, io = 0;
     list.forEach(g => {
+      if (!g.attributes.normal) g.computeVertexNormals();
       const p = g.attributes.position, n = g.attributes.normal, c = g.attributes.color;
       pos.set(p.array, vo * 3); nor.set(n.array, vo * 3);
-      if (col && c) col.set(c.array, vo * 3);
+      if (col) { if (c) col.set(c.array, vo * 3); else col.fill(1, vo * 3, (vo + p.count) * 3); }
       if (g.index) { const a = g.index.array; for (let i = 0; i < a.length; i++) idx[io + i] = a[i] + vo; io += a.length; }
       else { for (let i = 0; i < p.count; i++) idx[io + i] = vo + i; io += p.count; }
       vo += p.count;
@@ -47,23 +154,142 @@
     out.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
     if (col) out.setAttribute('color', new THREE.BufferAttribute(col, 3));
     out.setIndex(new THREE.BufferAttribute(idx, 1));
+    out.computeBoundingSphere();
     return out;
-  }
-  function gradientTube(curve, seg, rad, radial, c0, c1) {
+  };
+  /* أنبوب يضيق من بدايته إلى نهايته، مع لون متدرج اختياري */
+  K.tube = function (curve, seg, r0, r1, radial, c0, c1) {
     const THREE = T();
-    const g = new THREE.TubeGeometry(curve, seg, rad, radial, false);
-    const n = g.attributes.position.count, col = new Float32Array(n * 3);
-    for (let i = 0; i <= seg; i++) for (let j = 0; j <= radial; j++) {
-      const k = i * (radial + 1) + j, t = i / seg;
-      col[k * 3] = lab.lerp(c0[0], c1[0], t); col[k * 3 + 1] = lab.lerp(c0[1], c1[1], t); col[k * 3 + 2] = lab.lerp(c0[2], c1[2], t);
+    const g = new THREE.TubeGeometry(curve, seg, 1, radial || 10, false);
+    const p = g.attributes.position, n = g.attributes.normal;
+    const frames = curve.computeFrenetFrames(seg, false);
+    const col = c0 ? new Float32Array(p.count * 3) : null;
+    for (let i = 0; i <= seg; i++) {
+      const t = i / seg, r = r0 + (r1 - r0) * t, c = curve.getPointAt(t);
+      for (let j = 0; j <= (radial || 10); j++) {
+        const k = i * ((radial || 10) + 1) + j;
+        p.setXYZ(k, c.x + n.getX(k) * r, c.y + n.getY(k) * r, c.z + n.getZ(k) * r);
+        if (col) { col[k * 3] = c0[0] + (c1[0] - c0[0]) * t; col[k * 3 + 1] = c0[1] + (c1[1] - c0[1]) * t; col[k * 3 + 2] = c0[2] + (c1[2] - c0[2]) * t; }
+      }
     }
-    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    if (col) g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    void frames;
     return g;
-  }
+  };
+  K.cap = function (pt, r, c) {
+    const THREE = T();
+    const g = new THREE.SphereGeometry(r, 10, 8);
+    g.translate(pt.x, pt.y, pt.z);
+    if (c) { const n = g.attributes.position.count, a = new Float32Array(n * 3); for (let i = 0; i < n; i++) a.set(c, i * 3); g.setAttribute('color', new THREE.BufferAttribute(a, 3)); }
+    return g;
+  };
 
-  /* ---------- generic viewer ---------- */
+  /* ---------- خامة النسيج الحي الإجرائية ---------- */
+  const GLSL_NOISE = `
+  vec3 k3h(vec3 p){ p=vec3(dot(p,vec3(127.1,311.7,74.7)),dot(p,vec3(269.5,183.3,246.1)),dot(p,vec3(113.5,271.9,124.6))); return fract(sin(p)*43758.5453123); }
+  float k3n(vec3 p){ vec3 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
+    return mix(mix(mix(k3h(i).x,k3h(i+vec3(1.,0.,0.)).x,f.x),mix(k3h(i+vec3(0.,1.,0.)).x,k3h(i+vec3(1.,1.,0.)).x,f.x),f.y),
+               mix(mix(k3h(i+vec3(0.,0.,1.)).x,k3h(i+vec3(1.,0.,1.)).x,f.x),mix(k3h(i+vec3(0.,1.,1.)).x,k3h(i+vec3(1.,1.,1.)).x,f.x),f.y),f.z); }
+  float k3f(vec3 p){ float a=0.5,s=0.0; for(int i=0;i<4;i++){ s+=a*k3n(p); p=p*2.03+vec3(17.1,9.2,4.7); a*=0.5; } return s; }
+  vec2 k3w(vec3 p){ vec3 i=floor(p), f=fract(p); float d1=9.0, d2=9.0;
+    for(int x=-1;x<=1;x++) for(int y=-1;y<=1;y++) for(int z=-1;z<=1;z++){ vec3 g=vec3(float(x),float(y),float(z)); vec3 r=g+k3h(i+g)-f; float d=dot(r,r); if(d<d1){ d2=d1; d1=d; } else if(d<d2){ d2=d; } }
+    return vec2(sqrt(d1), sqrt(d2)); }`;
+
+  K.tissue = function (o) {
+    const THREE = T();
+    o = o || {};
+    const m = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff, roughness: o.roughness !== undefined ? o.roughness : 0.5, metalness: 0,
+      clearcoat: o.clearcoat !== undefined ? o.clearcoat : 0.55, clearcoatRoughness: o.ccr !== undefined ? o.ccr : 0.28,
+      transparent: !!o.transparent, opacity: o.opacity !== undefined ? o.opacity : 1, side: o.side !== undefined ? o.side : THREE.FrontSide,
+      vertexColors: !!o.vertexColors, depthWrite: o.depthWrite !== undefined ? o.depthWrite : true,
+      envMapIntensity: o.env !== undefined ? o.env : 0.7
+    });
+    const U = {
+      uA: { value: K.col(o.a || 0xe8a3a3) }, uB: { value: K.col(o.b || o.a || 0xd88a8f) }, uEdge: { value: K.col(o.edge || 0x9c5866) },
+      uSpeck: { value: K.col(o.speck || 0x2f2a33) }, uCell: { value: o.cell || 6 }, uNoise: { value: o.noise || 3 },
+      uBump: { value: o.bump !== undefined ? o.bump : 0.012 }, uEdgeW: { value: o.edgeW || 0.08 }, uEdgeAmt: { value: o.edgeAmt !== undefined ? o.edgeAmt : 0.5 },
+      uSpeckAmt: { value: o.speckAmt || 0 }, uFiber: { value: o.fiber || 0 }, uFiberDir: { value: o.fiberDir || new THREE.Vector3(0, 1, 0) },
+      uRim: { value: K.col(o.rim || 0xff9a9a) }, uRimAmt: { value: o.rimAmt !== undefined ? o.rimAmt : 0.3 },
+      uSel: { value: -1 }, uSelCol: { value: K.col(o.selCol || 0xffd27a) }, uGlow: { value: 0 },
+      uF1: { value: new THREE.Vector4(0, 0, 0, 0) }, uF2: { value: new THREE.Vector4(0, 0, 0, 0) }, uF2Side: { value: 0 }, uFissW: { value: o.fissW || 0.03 }
+    };
+    m.userData.u = U;
+    m.extensions = { derivatives: true };
+    m.onBeforeCompile = sh => {
+      Object.assign(sh.uniforms, U);
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vObjPos;\nattribute float lobe;\nvarying float vLobe;')
+        .replace('#include <begin_vertex>', '#include <begin_vertex>\nvObjPos = position;\nvLobe = lobe;');
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', `#include <common>
+varying vec3 vObjPos; varying float vLobe;
+uniform vec3 uA, uB, uEdge, uSpeck, uRim, uSelCol, uFiberDir;
+uniform float uCell, uNoise, uBump, uEdgeW, uEdgeAmt, uSpeckAmt, uRimAmt, uSel, uFissW, uF2Side, uFiber, uGlow;
+uniform vec4 uF1, uF2;
+${GLSL_NOISE}`)
+        .replace('#include <color_fragment>', `#include <color_fragment>
+  vec3 kP = vObjPos;
+  float n1 = k3f(kP * uNoise);
+  vec2 wv = k3w(kP * uCell + vec3(n1 * 0.9));
+  float edge = 1.0 - smoothstep(0.0, uEdgeW, wv.y - wv.x);
+  float fine = k3n(kP * uNoise * 7.0);
+  float speck = smoothstep(0.62, 0.86, k3n(kP * uCell * 2.7 + 3.1)) * smoothstep(0.2, 0.9, edge) * uSpeckAmt;
+  float fib = uFiber > 0.0 ? 0.5 + 0.5 * sin(dot(kP, uFiberDir) * 90.0 + fine * 4.0) : 0.0;
+  float fiss = 0.0;
+  if (dot(uF1.xyz, uF1.xyz) > 0.0) {
+    float s1 = dot(kP, uF1.xyz) - uF1.w;
+    float fd = abs(s1);
+    if (dot(uF2.xyz, uF2.xyz) > 0.0 && (uF2Side == 0.0 || s1 * uF2Side > 0.0)) fd = min(fd, abs(dot(kP, uF2.xyz) - uF2.w));
+    fiss = 1.0 - smoothstep(0.0, uFissW, fd);
+  }
+  vec3 base = mix(uA, uB, smoothstep(0.28, 0.75, n1));
+  #ifdef USE_COLOR
+    base = mix(base, vColor * mix(0.85, 1.12, n1), 0.85);
+  #endif
+  base = mix(base, uEdge, edge * uEdgeAmt);
+  base = mix(base, uSpeck, clamp(speck, 0.0, 1.0));
+  base *= 1.0 - fib * uFiber * 0.25;
+  base = mix(base, base * 0.28, fiss);
+  if (uSel > -0.5 && abs(vLobe - uSel) < 0.5) base = mix(base, uSelCol, 0.42);
+  diffuseColor.rgb = base;
+  float hgt = -edge * 0.7 + n1 * 0.55 + fine * 0.12 - fiss * 2.4 + fib * uFiber * 0.5;`)
+        .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
+  {
+    vec3 kDpx = dFdx(-vViewPosition), kDpy = dFdy(-vViewPosition);
+    float kHx = dFdx(hgt) * uBump, kHy = dFdy(hgt) * uBump;
+    vec3 kR1 = cross(kDpy, normal), kR2 = cross(normal, kDpx);
+    float kDet = dot(kDpx, kR1);
+    vec3 kGr = sign(kDet) * (kHx * kR1 + kHy * kR2);
+    normal = normalize(abs(kDet) * normal - kGr);
+  }`)
+        .replace('gl_FragColor = vec4( outgoingLight, diffuseColor.a );', `
+  float fres = pow(1.0 - clamp(dot(normalize(vViewPosition), normal), 0.0, 1.0), 2.4);
+  outgoingLight += uRim * fres * uRimAmt + diffuseColor.rgb * uGlow;
+  gl_FragColor = vec4( outgoingLight, diffuseColor.a );`);
+    };
+    m.customProgramCacheKey = () => 'k3tissue' + (o.vertexColors ? 'c' : '');
+    return m;
+  };
+
+  /* ظل ناعم تحت المجسم */
+  K.contactShadow = function (scene, y, sx, sz, op) {
+    const THREE = T();
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const x = c.getContext('2d'), g = x.createRadialGradient(64, 64, 4, 64, 64, 64);
+    g.addColorStop(0, 'rgba(20,24,32,0.55)'); g.addColorStop(0.55, 'rgba(20,24,32,0.18)'); g.addColorStop(1, 'rgba(20,24,32,0)');
+    x.fillStyle = g; x.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(sx, sz), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, opacity: op || 0.6, toneMapped: false }));
+    m.rotation.x = -Math.PI / 2; m.position.y = y; m.renderOrder = -1;
+    scene.add(m);
+    return m;
+  };
+
+  /* ---------- العارض ---------- */
   function Viewer(el, o) {
     this.el = el;
+    el.__v = this;
     this.ok = false;
     if (!T() || !webgl()) {
       el.insertAdjacentHTML('beforeend', '<div class="v-fallback">تعذّر تشغيل المجسم ثلاثي الأبعاد في هذا المتصفح. جرّب Chrome أو Safari حديثاً.</div>');
@@ -71,34 +297,53 @@
     }
     const THREE = T();
     this.ok = true;
-    const R = (this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' }));
+    const R = (this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' }));
     R.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    R.outputEncoding = THREE.sRGBEncoding;
+    R.toneMapping = THREE.ACESFilmicToneMapping;
+    R.toneMappingExposure = o.exposure || 1.05;
+    R.physicallyCorrectLights = false;
+    if (o.shadows) { R.shadowMap.enabled = true; R.shadowMap.type = THREE.PCFSoftShadowMap; }
+    if (o.clip) R.localClippingEnabled = true;
     el.prepend(R.domElement);
-    this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(o.fov || 32, 1, 0.1, 100);
+    const S = (this.scene = new THREE.Scene());
+    if (THREE.RoomEnvironment) {
+      try { const pm = new THREE.PMREMGenerator(R); S.environment = pm.fromScene(new THREE.RoomEnvironment(), 0.04).texture; pm.dispose(); } catch (e) {}
+    }
+    this.camera = new THREE.PerspectiveCamera(o.fov || 32, 1, 0.05, 200);
     this.camera.position.set(o.cam[0], o.cam[1], o.cam[2]);
     const tg = o.target || [0, 0, 0];
     if (THREE.OrbitControls) {
       const c = (this.controls = new THREE.OrbitControls(this.camera, R.domElement));
-      c.enableDamping = true; c.dampingFactor = 0.08; c.enablePan = false;
+      c.enableDamping = true; c.dampingFactor = 0.08; c.enablePan = false; c.rotateSpeed = 0.8;
       c.minDistance = o.minD || 3; c.maxDistance = o.maxD || 14;
       c.target.set(tg[0], tg[1], tg[2]);
-      c.autoRotate = !lab.reduce; c.autoRotateSpeed = o.spin || 0.7;
+      c.autoRotate = !lab.reduce && o.spin !== 0; c.autoRotateSpeed = o.spin || 0.6;
       let tm = 0;
       c.addEventListener('start', () => { c.autoRotate = false; clearTimeout(tm); });
-      c.addEventListener('end', () => { clearTimeout(tm); tm = setTimeout(() => (c.autoRotate = !lab.reduce), 7000); });
+      c.addEventListener('end', () => { clearTimeout(tm); tm = setTimeout(() => (c.autoRotate = !lab.reduce && o.spin !== 0), 8000); });
       R.domElement.style.touchAction = 'pan-y';
     } else this.camera.lookAt(tg[0], tg[1], tg[2]);
-    this.scene.add(new THREE.HemisphereLight(0xffffff, 0x4a5a72, 0.9));
-    const d = new THREE.DirectionalLight(0xffffff, 0.85); d.position.set(3, 5, 4); this.scene.add(d);
-    const r = new THREE.DirectionalLight(0xa9c2ff, 0.4); r.position.set(-4, 2, -4); this.scene.add(r);
+    // إضاءة استوديو: مفتاحية بظل، تعبئة، وحافة خلفية
+    S.add(new THREE.HemisphereLight(0xfff4ec, 0x40363a, o.hemi !== undefined ? o.hemi : 0.35));
+    const key = (this.key = new THREE.DirectionalLight(0xfff1e6, o.keyI || 1.55));
+    key.position.set(3.5, 6, 5.5);
+    if (o.shadows) {
+      key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0006; key.shadow.normalBias = 0.025; key.shadow.radius = 4;
+      const sc = key.shadow.camera, s = o.shadowSize || 4; sc.left = -s; sc.right = s; sc.top = s; sc.bottom = -s; sc.near = 0.5; sc.far = 25;
+    }
+    S.add(key);
+    const rim = new THREE.DirectionalLight(0xb8ccff, o.rimI || 0.9); rim.position.set(-4, 3, -5); S.add(rim);
+    const fill = new THREE.DirectionalLight(0xffe0d6, 0.35); fill.position.set(-5, -1, 3); S.add(fill);
     this.labelBox = document.createElement('div'); this.labelBox.className = 'v-labels'; el.appendChild(this.labelBox);
     this.labels = []; this.showLabels = true;
     const resize = () => {
       const w = el.clientWidth, h = el.clientHeight;
       if (!w || !h) return;
       R.setSize(w, h, false);
-      this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
+      this.camera.aspect = w / h;
+      if (o.fitW) { const need = o.fitW / (2 * Math.tan((this.camera.fov * Math.PI) / 360) * this.camera.aspect); this.camera.zoom = Math.min(1, (this.camera.position.distanceTo(new THREE.Vector3(...tg)) / need)); }
+      this.camera.updateProjectionMatrix();
     };
     if ('ResizeObserver' in window) new ResizeObserver(resize).observe(el); else window.addEventListener('resize', resize);
     resize();
@@ -114,33 +359,38 @@
       const v = new THREE.Vector2(((e.clientX - rect.left) / rect.width) * 2 - 1, -((e.clientY - rect.top) / rect.height) * 2 + 1);
       const rc = new THREE.Raycaster();
       rc.setFromCamera(v, this.camera);
-      const hits = rc.intersectObjects(this.pickables, false).filter(h => h.object.visible);
+      const hits = rc.intersectObjects(this.pickables, false).filter(h => h.object.visible && (!h.object.material || h.object.material.opacity > 0.25));
       this.onPick(hits[0] || null);
     });
     this.frame = null;
     this._v = new THREE.Vector3();
     lab.loop(el, (dt, t) => {
+      if (this.hold || (lab.navigating && Date.now() - lab.navigating < 900)) return;
       if (this.frame) this.frame(dt, t);
       if (this.controls) this.controls.update();
-      R.render(this.scene, this.camera);
+      R.render(S, this.camera);
       this.updateLabels();
     });
   }
-  Viewer.prototype.label = function (text, pos, obj) {
+  Viewer.prototype.label = function (text, pos, obj, facing) {
     const THREE = T();
     const d = document.createElement('div');
     d.className = 'v-label'; d.textContent = text;
     this.labelBox.appendChild(d);
-    const item = { el: d, pos: new THREE.Vector3(pos[0], pos[1], pos[2]), obj: obj || null, hidden: false };
+    const item = { el: d, pos: new THREE.Vector3(pos[0], pos[1], pos[2]), obj: obj || null, hidden: false, n: facing ? new THREE.Vector3(...facing).normalize() : null };
     this.labels.push(item);
     return item;
   };
   Viewer.prototype.updateLabels = function () {
     const w = this.el.clientWidth, h = this.el.clientHeight, v = this._v;
     this.labels.forEach(l => {
-      if (!this.showLabels || l.hidden) { if (l.el.style.display !== 'none') l.el.style.display = 'none'; return; }
+      if (!this.showLabels || l.hidden || (l.obj && !l.obj.visible)) { if (l.el.style.display !== 'none') l.el.style.display = 'none'; return; }
       v.copy(l.pos);
       if (l.obj) l.obj.localToWorld(v);
+      if (l.n) {
+        const cx = this.camera.position.x - v.x, cy = this.camera.position.y - v.y, cz = this.camera.position.z - v.z;
+        if ((l.n.x * cx + l.n.y * cy + l.n.z * cz) / (Math.hypot(cx, cy, cz) || 1) < -0.05) { if (l.el.style.display !== 'none') l.el.style.display = 'none'; return; }
+      }
       v.project(this.camera);
       if (v.z > 1) { l.el.style.display = 'none'; return; }
       l.el.style.display = '';
@@ -158,8 +408,9 @@
       b.addEventListener('click', () => {
         const on = b.getAttribute('aria-pressed') !== 'true';
         b.setAttribute('aria-pressed', String(on));
-        it.cb(on);
+        it.cb(on, b);
       });
+      it.btn = b;
       bar.appendChild(b);
     });
     this.el.appendChild(bar);
@@ -167,401 +418,22 @@
   };
   Viewer.prototype.badge = function () { const b = document.createElement('div'); b.className = 'v-badge'; this.el.appendChild(b); return b; };
   Viewer.prototype.info = function () { const b = document.createElement('div'); b.className = 'v-info'; b.hidden = true; this.el.appendChild(b); return b; };
+  Viewer.prototype.loading = function (on) {
+    this.hold = !!on && !this._built;
+    if (!on) this._built = true;
+    if (on) { if (!this._ld) { this._ld = document.createElement('div'); this._ld.className = 'v-loading'; this._ld.textContent = 'جارٍ بناء المجسم…'; this.el.appendChild(this._ld); } }
+    else if (this._ld) { this._ld.remove(); this._ld = null; }
+  };
+  K.Viewer = Viewer;
 
-  const breathCurve = p => (p < 0.4 ? lab.ease(p / 0.4) : 1 - lab.ease((p - 0.4) / 0.6));
-
-  /* =========================== الرئتان =========================== */
-  function lungGeometry(side) {
-    const THREE = T();
-    const g = new THREE.SphereGeometry(1, 72, 56);
-    const p = g.attributes.position, n = p.count;
-    const lobe = new Float32Array(n), fiss = new Float32Array(n), mott = new Float32Array(n);
-    for (let i = 0; i < n; i++) {
-      const ux = p.getX(i), uy = p.getY(i), uz = p.getZ(i);
-      const u = (uy + 1) / 2;
-      const s = u > 0.32 ? 0.6 + 0.4 * (1 - Math.pow((u - 0.32) / 0.68, 1.4)) : 0.93 + 0.07 * (u / 0.32);
-      let x = ux * s, y = uy, z = uz * s;
-      if (x * side < 0) x *= 0.6;
-      const tb = lab.clamp((-uy - 0.3) / 0.7, 0, 1), r2 = ux * ux + uz * uz;
-      y += 0.42 * tb * (1 - Math.min(1, r2 * 1.15));
-      if (side > 0) {
-        const w = Math.exp(-Math.pow((uy + 0.35) / 0.28, 2)) * lab.clamp(uz * 1.4, 0, 1) * (x * side < 0.15 ? 1 : 0.3);
-        x += 0.3 * w * side;
-      } else x *= 1.07;
-      x *= 0.98; y *= side < 0 ? 1.5 : 1.55; z *= 0.82;
-      const nz = 1 + 0.012 * Math.sin(9 * ux + 1.3) * Math.sin(11 * uy) * Math.sin(8 * uz + 0.7);
-      p.setXYZ(i, x * nz, y * nz, z * nz);
-      const obl = uy - (-0.12 - 0.72 * uz);
-      let id, f = 0;
-      if (side < 0) {
-        if (obl < 0) id = 2; else if (uy < 0.2 && uz > -0.2) id = 1; else id = 0;
-        if (Math.abs(obl) < 0.022) f = 1;
-        if (obl > 0 && uz > -0.2 && Math.abs(uy - 0.2) < 0.02) f = 1;
-      } else {
-        id = obl < 0 ? 2 : 0;
-        if (Math.abs(obl) < 0.022) f = 1;
-      }
-      lobe[i] = id; fiss[i] = f;
-      mott[i] = 0.94 + 0.06 * (0.5 + 0.5 * Math.sin(23 * ux) * Math.sin(19 * uy + 1) * Math.sin(21 * uz + 2));
-    }
-    smoothSeams(g);
-    g.setAttribute('lobe', new THREE.BufferAttribute(lobe, 1));
-    g.setAttribute('fiss', new THREE.BufferAttribute(fiss, 1));
-    g.setAttribute('mott', new THREE.BufferAttribute(mott, 1));
-    g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
-    return g;
-  }
-  const LOBE_COL = [[0.94, 0.65, 0.67], [0.89, 0.56, 0.61], [0.83, 0.5, 0.56]];
-  const FISS_COL = [0.5, 0.24, 0.3];
-  function paintLung(mesh, sel) {
-    const g = mesh.geometry, lo = g.attributes.lobe, fi = g.attributes.fiss, mo = g.attributes.mott, col = g.attributes.color;
-    for (let i = 0; i < lo.count; i++) {
-      const id = lo.getX(i);
-      let c = fi.getX(i) > 0 ? FISS_COL : LOBE_COL[id];
-      if (sel === id && fi.getX(i) === 0) c = [lab.lerp(c[0], 1, 0.5), lab.lerp(c[1], 0.86, 0.5), lab.lerp(c[2], 0.5, 0.5)];
-      const m = mo.getX(i);
-      col.setXYZ(i, c[0] * m, c[1] * m, c[2] * m);
-    }
-    col.needsUpdate = true;
-  }
-  function bronchTree(side, rnd) {
-    const THREE = T();
-    const parts = [];
-    const inside = q => (q.x * q.x) / 0.72 + ((q.y + 0.1) * (q.y + 0.1)) / 1.9 + (q.z * q.z) / 0.5 < 1;
-    function br(a, dir, len, rad, depth) {
-      const b = a.clone().addScaledVector(dir, len);
-      let k = 0;
-      while (!inside(b) && k < 6) { len *= 0.72; b.copy(a).addScaledVector(dir, len); k++; }
-      parts.push(new THREE.TubeGeometry(new THREE.LineCurve3(a.clone(), b.clone()), 1, rad, 6, false));
-      parts.push(new THREE.SphereGeometry(rad, 6, 4).translate(b.x, b.y, b.z));
-      if (depth === 0) return;
-      for (let c = 0; c < 2; c++) {
-        const nd = dir.clone();
-        const axis = new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).normalize();
-        nd.applyAxisAngle(axis, (0.45 + rnd() * 0.35) * (c ? 1 : -1));
-        nd.y -= 0.12; nd.normalize();
-        br(b, nd, len * 0.74, rad * 0.72, depth - 1);
-      }
-    }
-    const start = new THREE.Vector3(-side * 0.36, 0.48, -0.05);
-    [[side * 0.35, 0.85, 0.05], [side * 0.85, -0.1, 0.12], [side * 0.3, -0.92, -0.05]].forEach(d =>
-      br(start, new THREE.Vector3(d[0], d[1], d[2]).normalize(), 0.55, 0.06, 4));
-    return merge(parts);
-  }
-
-  function buildLungs(el) {
-    const V = new Viewer(el, { cam: [0, 0.5, 8.6], target: [0, 0.2, 0], minD: 4.5, maxD: 13, spin: 0.55, fov: 32 });
-    if (!V.ok) return;
-    const THREE = T(), S = V.scene;
-    const root = new THREE.Group(); S.add(root);
-    const cart = new THREE.MeshStandardMaterial({ color: 0xf1e1cd, roughness: 0.55 });
-    const cartD = new THREE.MeshStandardMaterial({ color: 0xe2cbb0, roughness: 0.5 });
-    const lungs = [];
-    const lungGroup = new THREE.Group(); root.add(lungGroup);
-    const visc = [], pari = [], trees = [];
-    [-1, 1].forEach(side => {
-      const g = lungGeometry(side);
-      const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.62, metalness: 0, transparent: false, opacity: 1 });
-      const m = new THREE.Mesh(g, mat);
-      m.position.set(side * 1.03, 0.12, 0);
-      m.userData = { side, kind: 'lung' };
-      lungGroup.add(m); lungs.push(m); paintLung(m, -1);
-      const tree = new THREE.Mesh(bronchTree(side, lab.rnd(side > 0 ? 11 : 5)), cart);
-      tree.visible = false; m.add(tree); trees.push(tree);
-      const vp = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: 0xd6ecff, transparent: true, opacity: 0.2, roughness: 0.15, depthWrite: false }));
-      vp.scale.setScalar(1.035); vp.visible = false; m.add(vp); visc.push(vp);
-      const pp = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: 0x9ec1ff, transparent: true, opacity: 0.13, roughness: 0.3, depthWrite: false, side: THREE.DoubleSide }));
-      pp.scale.setScalar(1.12); pp.visible = false; m.add(pp); pari.push(pp);
-    });
-    // القصبة الهوائية والشعبتان
-    const trachea = new THREE.Mesh(new THREE.CylinderGeometry(0.165, 0.175, 1.35, 28, 1, true), cart);
-    trachea.position.set(0, 2.08, 0); trachea.userData.kind = 'trachea'; root.add(trachea);
-    for (let k = 0; k < 9; k++) {
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.178, 0.03, 8, 30), cartD);
-      ring.rotation.x = Math.PI / 2; ring.position.set(0, 1.5 + k * 0.135, 0); root.add(ring);
-    }
-    [[-1, [-0.32, 1.1, 0], [-0.66, 0.66, -0.05]], [1, [0.36, 1.14, 0], [0.7, 0.72, -0.05]]].forEach(b => {
-      const c = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 1.42, 0), new THREE.Vector3(...b[1]), new THREE.Vector3(...b[2])]);
-      const tube = new THREE.Mesh(new THREE.TubeGeometry(c, 24, 0.105, 14, false), cart);
-      tube.userData.kind = 'bronchus'; root.add(tube); V.pickables.push(tube);
-    });
-    // القلب
-    const heart = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 24), new THREE.MeshStandardMaterial({ color: 0xa8303f, roughness: 0.45 }));
-    heart.scale.set(1, 1.2, 0.85); heart.rotation.z = 0.5; heart.position.set(0.24, -0.5, 0.42); heart.userData.kind = 'heart'; root.add(heart);
-    // الحجاب الحاجز
-    const dia = new THREE.Mesh(new THREE.SphereGeometry(1, 56, 20, 0, Math.PI * 2, 0, Math.PI * 0.45),
-      new THREE.MeshStandardMaterial({ color: 0xb4564c, roughness: 0.7, side: THREE.DoubleSide }));
-    dia.scale.set(2.25, 0.66, 1.45); dia.position.y = -1.42; dia.userData.kind = 'dia'; root.add(dia);
-    V.pickables.push(...lungs, trachea, heart, dia);
-
-    // labels
-    V.label('القصبة الهوائية', [0.75, 2.45, 0]);
-    V.label('الرئة اليمنى · 3 فصوص', [-1.35, 1.75, 0.3]);
-    V.label('الرئة اليسرى · فصان', [1.35, 1.75, 0.3]);
-    V.label('الحجاب الحاجز', [1.75, -1.25, 0.6]);
-    const badge = V.badge();
-    const info = V.info();
-    let breathing = !lab.reduce, t = 0, sel = null, infoTimer = 0;
-    V.controlsBar([
-      { label: 'تنفس', on: breathing, cb: on => (breathing = on) },
-      { label: 'الشجرة القصبية', on: false, cb: on => { trees.forEach(tr => (tr.visible = on)); lungs.forEach(m => { m.material.transparent = on; m.material.opacity = on ? 0.3 : 1; m.material.depthWrite = !on; m.material.needsUpdate = true; }); } },
-      { label: 'غشاء الجنب', on: false, cb: on => { visc.forEach(v => (v.visible = on)); pari.forEach(v => (v.visible = on)); showInfo(on ? ['غشاء الجنب', 'الطبقة الملاصقة للرئة هي الغشاء الحشوي، والطبقة الخارجية هي الجداري، وبينهما التجويف الجنبي المملوء بسائل انزلاقي.'] : null); } },
-      { label: 'الأسماء', on: true, cb: on => (V.showLabels = on) }
-    ]);
-    const LOBES = ['الفص العلوي', 'الفص الأوسط', 'الفص السفلي'];
-    function showInfo(x) {
-      clearTimeout(infoTimer);
-      if (!x) { info.hidden = true; return; }
-      info.innerHTML = `<b>${x[0]}</b>${x[1]}`; info.hidden = false;
-      infoTimer = setTimeout(() => { info.hidden = true; if (sel) { paintLung(sel, -1); sel = null; } }, 7000);
-    }
-    V.onPick = hit => {
-      if (sel) { paintLung(sel, -1); sel = null; }
-      if (!hit) { showInfo(null); return; }
-      const k = hit.object.userData.kind;
-      if (k === 'lung') {
-        const m = hit.object, id = m.geometry.attributes.lobe.getX(hit.face.a);
-        sel = m; paintLung(m, id);
-        const right = m.userData.side < 0;
-        showInfo([`${LOBES[id]} · ${right ? 'الرئة اليمنى' : 'الرئة اليسرى'}`, right ? 'الرئة اليمنى ثلاثة فصوص: علوي وأوسط وسفلي. لكل فص تجهيز هوائي ودموي خاص به.' : 'الرئة اليسرى فصان: علوي وسفلي، وفيها تقعّر يفسح مكاناً للقلب.']);
-      } else if (k === 'trachea' || k === 'bronchus') showInfo([k === 'trachea' ? 'القصبة الهوائية' : 'القصبة (الشعبة) الهوائية', 'تمرر الهواء إلى الرئتين وتتفرع داخلهما إلى فروع أدق حتى الأكياس السنخية.']);
-      else if (k === 'dia') showInfo(['الحجاب الحاجز', 'عضلة تتقلص في الشهيق فتصبح مستوية بعد أن كانت محدبة إلى الأعلى، فيتوسع القفص الصدري.']);
-      else if (k === 'heart') showInfo(['القلب', 'يقع بين الرئتين. يضخ الدم إليهما ليتأكسج، والخرج القلبي حوالي 5 لتر/دقيقة.']);
-    };
-    V.frame = dt => {
-      if (breathing) t += dt;
-      const p = (t % 5) / 5, b = breathCurve(p);
-      lungGroup.scale.set(1 + 0.065 * b, 1 + 0.055 * b, 1 + 0.065 * b);
-      lungGroup.position.y = -0.06 * b;
-      dia.position.y = -1.42 - 0.17 * b;
-      dia.scale.y = 0.66 - 0.2 * b;
-      const txt = !breathing ? 'متوقف' : p < 0.4 ? 'شهيق ↓ الحجاب' : 'زفير ↑ الحجاب';
-      if (badge.textContent !== txt) badge.textContent = txt;
-    };
-  }
-
-  /* =========================== الأسناخ =========================== */
-  function buildAlveoli(el) {
-    const V = new Viewer(el, { cam: [0, 0.3, 6.6], target: [0, -0.15, 0], minD: 3.2, maxD: 10, spin: 0.8, fov: 34 });
-    if (!V.ok) return;
-    const THREE = T(), S = V.scene;
-    const root = new THREE.Group(); S.add(root);
-    const rnd = lab.rnd(7);
-    const cream = new THREE.MeshStandardMaterial({ color: 0xf0dcc6, roughness: 0.5 });
-    const ductMat = new THREE.MeshPhysicalMaterial({ color: 0xeeb2b0, roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.3 });
-    const alvMat = new THREE.MeshPhysicalMaterial({ color: 0xf0b6b4, roughness: 0.32, clearcoat: 0.7, clearcoatRoughness: 0.25, transparent: true, opacity: 0.94 });
-    root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(0, 2.4, 0), new THREE.Vector3(0, 0.95, 0)), 1, 0.17, 18), cream));
-    for (let k = 0; k < 5; k++) { const r = new THREE.Mesh(new THREE.TorusGeometry(0.175, 0.022, 6, 24), new THREE.MeshStandardMaterial({ color: 0xe0c7aa })); r.rotation.x = Math.PI / 2; r.position.y = 1.2 + k * 0.24; root.add(r); }
-    const hub = new THREE.Vector3(0, 0.3, 0);
-    root.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(0, 1.0, 0), hub), 1, 0.13, 16), ductMat));
-    const centers = [new THREE.Vector3(-0.92, -0.4, 0.1), new THREE.Vector3(0.92, -0.32, -0.1), new THREE.Vector3(0.05, -1.08, 0.38)];
-    const blue = [0.24, 0.4, 0.84], red = [0.83, 0.23, 0.31];
-    const sacs = [];
-    const dummy = new THREE.Object3D(), cA = new THREE.Color(), cB = new THREE.Color();
-    centers.forEach((c, si) => {
-      const duct = new THREE.CatmullRomCurve3([hub.clone(), hub.clone().lerp(c, 0.5).add(new THREE.Vector3(0, 0.08, 0)), c.clone()]);
-      root.add(new THREE.Mesh(new THREE.TubeGeometry(duct, 16, 0.1, 12), ductMat));
-      const sg = new THREE.Group(); sg.position.copy(c); root.add(sg);
-      const N = 11, caps = [], curves = [];
-      for (let i = 0; i < N; i++) {
-        const yv = 1 - (i / (N - 1)) * 2, rr = Math.sqrt(1 - yv * yv), th = i * 2.399963 + si;
-        const dir = new THREE.Vector3(Math.cos(th) * rr, yv, Math.sin(th) * rr).normalize();
-        if (dir.y > 0.75) dir.y = 0.4;
-        dir.normalize();
-        const r = 0.27 + rnd() * 0.08, pc = dir.clone().multiplyScalar(0.46 + rnd() * 0.06);
-        const m = new THREE.Mesh(new THREE.SphereGeometry(r, 28, 20), alvMat);
-        m.position.copy(pc); sg.add(m);
-        for (let a = 0; a < 3; a++) {
-          const ax = new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).normalize();
-          const st = new THREE.Vector3(rnd() - 0.5, rnd() - 0.5, rnd() - 0.5).cross(ax).normalize();
-          const pts = [];
-          for (let q = 0; q <= 8; q++) pts.push(st.clone().applyAxisAngle(ax, -1.2 + (q / 8) * 2.4).multiplyScalar(r * 1.045).add(pc));
-          const cv = new THREE.CatmullRomCurve3(pts);
-          curves.push(cv);
-          caps.push(gradientTube(cv, 20, 0.016, 5, blue, red));
-        }
-      }
-      const capMesh = new THREE.Mesh(merge(caps), new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.45 }));
-      sg.add(capMesh);
-      const count = 34;
-      const rbc = new THREE.InstancedMesh(new THREE.SphereGeometry(0.034, 8, 6), new THREE.MeshStandardMaterial({ roughness: 0.4 }), count);
-      const st = [];
-      for (let i = 0; i < count; i++) st.push({ c: Math.floor(rnd() * curves.length), t: rnd() });
-      sg.add(rbc);
-      sacs.push({ sg, curves, rbc, st, capMesh });
-    });
-    // الشرين والوريد الرئوي
-    const art = new THREE.CatmullRomCurve3([new THREE.Vector3(-0.42, 2.3, -0.3), new THREE.Vector3(-0.38, 1.0, -0.32), new THREE.Vector3(-0.7, 0.05, -0.4), new THREE.Vector3(-0.95, -0.35, -0.38)]);
-    const ven = new THREE.CatmullRomCurve3([new THREE.Vector3(0.42, 2.3, -0.3), new THREE.Vector3(0.38, 1.0, -0.32), new THREE.Vector3(0.7, 0.05, -0.42), new THREE.Vector3(0.95, -0.3, -0.4)]);
-    root.add(new THREE.Mesh(new THREE.TubeGeometry(art, 40, 0.07, 10), new THREE.MeshStandardMaterial({ color: 0x3d67d6, roughness: 0.4 })));
-    root.add(new THREE.Mesh(new THREE.TubeGeometry(ven, 40, 0.07, 10), new THREE.MeshStandardMaterial({ color: 0xd23a4f, roughness: 0.4 })));
-
-    V.label('القصيبة الهوائية', [0.62, 1.95, 0]);
-    V.label('القناة السنخية', [0.55, 0.62, 0.1]);
-    V.label('الكيس السنخي', [-0.92, 0.42, 0.45]);
-    V.label('سنخ (0.2 ملم)', [0.05, -1.75, 0.6]);
-    V.label('شُرين: دم غير مؤكسج', [-0.85, 2.45, -0.3]);
-    V.label('وريد: دم مؤكسج', [0.85, 2.45, -0.3]);
-    let breathing = !lab.reduce, t = 0;
-    V.controlsBar([
-      { label: 'تنفس', on: breathing, cb: on => (breathing = on) },
-      { label: 'الشعيرات', on: true, cb: on => sacs.forEach(s => { s.capMesh.visible = on; s.rbc.visible = on; }) },
-      { label: 'الأسماء', on: true, cb: on => (V.showLabels = on) }
-    ]);
-    const tmp = new THREE.Vector3();
-    V.frame = dt => {
-      if (breathing) t += dt;
-      const b = breathCurve((t % 5) / 5);
-      sacs.forEach(s => {
-        s.sg.scale.setScalar(1 + 0.06 * b);
-        if (!s.rbc.visible) return;
-        for (let i = 0; i < s.st.length; i++) {
-          const q = s.st[i];
-          q.t += dt * 0.22;
-          if (q.t > 1) { q.t -= 1; q.c = Math.floor(Math.random() * s.curves.length); }
-          s.curves[q.c].getPoint(lab.clamp(q.t, 0, 1), tmp);
-          dummy.position.copy(tmp); dummy.scale.set(1, 0.55, 1); dummy.updateMatrix();
-          s.rbc.setMatrixAt(i, dummy.matrix);
-          cA.setRGB(blue[0], blue[1], blue[2]); cB.setRGB(red[0], red[1], red[2]);
-          cA.lerp(cB, lab.clamp(q.t * 1.3, 0, 1));
-          if (s.rbc.setColorAt) s.rbc.setColorAt(i, cA);
-        }
-        s.rbc.instanceMatrix.needsUpdate = true;
-        if (s.rbc.instanceColor) s.rbc.instanceColor.needsUpdate = true;
-      });
-    };
-  }
-
-  /* =========================== الهيموكلوبين =========================== */
-  function blobGeometry(seed, r) {
-    const THREE = T();
-    const g = new THREE.IcosahedronGeometry(r, 4);
-    const p = g.attributes.position, v = new THREE.Vector3();
-    for (let i = 0; i < p.count; i++) {
-      v.fromBufferAttribute(p, i);
-      const u = v.clone().normalize();
-      const n = 1 + 0.1 * Math.sin(3.1 * u.x + seed) * Math.sin(2.7 * u.y + seed * 1.7) * Math.sin(3.3 * u.z + seed * 0.6)
-        + 0.05 * Math.sin(7.3 * u.x + seed * 2) * Math.sin(6.1 * u.y) * Math.sin(7.7 * u.z + seed)
-        + 0.025 * Math.sin(14 * u.x) * Math.sin(13 * u.y + seed) * Math.sin(15 * u.z);
-      v.multiplyScalar(n);
-      p.setXYZ(i, v.x, v.y, v.z);
-    }
-    smoothSeams(g);
-    return g;
-  }
-  function buildHb(el) {
-    const V = new Viewer(el, { cam: [0, 0.4, 6.8], target: [0, 0, 0], minD: 3.6, maxD: 11, spin: 0.9, fov: 34 });
-    const api = { count: 0, busy: false, listeners: [] };
-    lab.hb = api;
-    if (!V.ok) {
-      // نسخة بلا رسم: تحافظ على عمل المعادلات والأزرار
-      api.add = () => { if (api.count < 4) { api.count++; api.listeners.forEach(f => f(api.count)); } };
-      api.remove = () => { if (api.count > 0) { api.count--; api.listeners.forEach(f => f(api.count)); } };
-      api.setTarget = n => { api.count = n; api.listeners.forEach(f => f(api.count)); };
-      return;
-    }
-    const THREE = T(), S = V.scene;
-    const root = new THREE.Group(); S.add(root);
-    const defs = [
-      { pos: [-0.64, 0.5, 0.38], col: 0xe0808b, name: 'α', grp: 0 },
-      { pos: [0.64, 0.5, -0.38], col: 0x7d90e0, name: 'β', grp: 1 },
-      { pos: [0.64, -0.5, 0.38], col: 0xe0808b, name: 'α', grp: 0 },
-      { pos: [-0.64, -0.5, -0.38], col: 0x7d90e0, name: 'β', grp: 1 }
-    ];
-    const deoxy = new THREE.Color(0x531431), oxy = new THREE.Color(0xd6223c);
-    const subs = defs.map((d, i) => {
-      const g = new THREE.Group(); g.position.set(...d.pos); root.add(g);
-      const blob = new THREE.Mesh(blobGeometry(i * 1.7 + 0.4, 0.66), new THREE.MeshStandardMaterial({ color: d.col, roughness: 0.78 }));
-      g.add(blob);
-      const dir = new THREE.Vector3(...d.pos).normalize();
-      const heme = new THREE.Group();
-      heme.position.copy(dir.clone().multiplyScalar(0.6));
-      heme.lookAt(dir.clone().multiplyScalar(5).add(g.position));
-      g.add(heme);
-      const ringMat = new THREE.MeshStandardMaterial({ color: deoxy.clone(), roughness: 0.35, metalness: 0.1 });
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.17, 0.038, 8, 4), ringMat);
-      ring.rotation.z = Math.PI / 4; heme.add(ring);
-      for (let k = 0; k < 4; k++) {
-        const s = new THREE.Mesh(new THREE.SphereGeometry(0.055, 12, 8), ringMat);
-        s.position.set(Math.cos(k * Math.PI / 2) * 0.17, Math.sin(k * Math.PI / 2) * 0.17, 0); heme.add(s);
-      }
-      const fe = new THREE.Mesh(new THREE.SphereGeometry(0.07, 16, 12), new THREE.MeshStandardMaterial({ color: 0xe39a32, emissive: 0x3a2200, roughness: 0.3, metalness: 0.4 }));
-      heme.add(fe);
-      return { g, heme, ringMat, base: g.rotation.y, grp: d.grp, ox: 0 };
-    });
-    function o2Mesh() {
-      const grp = new THREE.Group();
-      const mat = new THREE.MeshStandardMaterial({ color: 0xff3b55, roughness: 0.3, transparent: true, opacity: 1 });
-      [-0.075, 0.075].forEach(x => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 12), mat); s.position.x = x; grp.add(s); });
-      grp.userData.mat = mat;
-      return grp;
-    }
-    const site = new THREE.Vector3(0.04, 0, 0.17);
-    const order = [0, 2, 1, 3];
-    const bound = [null, null, null, null];
-    let relax = 0, queue = [], anim = null, target = null;
-    V.label('وحدة ثانوية α', [-1.25, 1.15, 0.5]);
-    V.label('وحدة ثانوية β', [1.25, 1.15, -0.5]);
-    V.label('هيم + \u2066Fe²⁺\u2069', [-1.05, -1.25, -0.3]);
-    V.controlsBar([{ label: 'الأسماء', on: true, cb: on => (V.showLabels = on) }]);
-    function emit() { api.listeners.forEach(f => f(api.count)); }
-    function step() {
-      if (anim || !queue.length) return;
-      const op = queue.shift();
-      if (op === 'add') {
-        const idx = order.find(i => !bound[i]);
-        if (idx === undefined) return step();
-        const s = subs[idx], m = o2Mesh();
-        const far = new THREE.Vector3(Math.sin(idx * 2.1) * 3.4, 2.2 - idx * 0.6, Math.cos(idx * 2.1) * 3.4);
-        root.updateMatrixWorld(true);
-        const from = s.heme.worldToLocal(far.clone());
-        s.heme.add(m); m.position.copy(from); m.rotation.z = 0.6;
-        bound[idx] = m;
-        const dur = api.count === 0 ? 1.5 : 0.6;
-        anim = { m, from, to: site.clone(), t: 0, dur, done: () => { api.count++; emit(); } , idx, kind: 'add' };
-      } else {
-        const idx = [...order].reverse().find(i => bound[i]);
-        if (idx === undefined) return step();
-        const s = subs[idx], m = bound[idx];
-        bound[idx] = null;
-        const to = site.clone().add(new THREE.Vector3(0.6, 0.8, 3));
-        anim = { m, from: m.position.clone(), to, t: 0, dur: 0.9, idx, kind: 'rem', done: () => { s.heme.remove(m); api.count--; emit(); } };
-      }
-      api.busy = true;
-    }
-    api.add = () => { if (api.count + queue.filter(q => q === 'add').length - queue.filter(q => q === 'rem').length < 4) { queue.push('add'); step(); } };
-    api.remove = () => { if (api.count + queue.filter(q => q === 'add').length - queue.filter(q => q === 'rem').length > 0) { queue.push('rem'); step(); } };
-    api.setTarget = n => {
-      queue = [];
-      target = n;
-      const pending = api.count + (anim ? (anim.kind === 'add' ? 1 : -1) : 0);
-      const diff = n - pending;
-      for (let i = 0; i < Math.abs(diff); i++) queue.push(diff > 0 ? 'add' : 'rem');
-      step();
-    };
-    V.frame = dt => {
-      if (anim) {
-        anim.t += dt / anim.dur;
-        const k = lab.ease(Math.min(1, anim.t));
-        anim.m.position.lerpVectors(anim.from, anim.to, k);
-        if (anim.kind === 'rem') anim.m.userData.mat.opacity = 1 - k;
-        if (anim.t >= 1) { const a = anim; anim = null; api.busy = false; a.done(); step(); }
-      }
-      const want = api.count > 0 || (anim && anim.kind === 'add') ? 1 : 0;
-      relax += (want - relax) * Math.min(1, dt * 2.5);
-      subs.forEach((s, i) => {
-        s.g.rotation.y = (s.grp ? -1 : 1) * 0.16 * relax;
-        const on = bound[i] && !(anim && anim.idx === i && anim.kind === 'add' && anim.t < 0.9) ? 1 : 0;
-        s.ox += (on - s.ox) * Math.min(1, dt * 4);
-        s.ringMat.color.copy(deoxy).lerp(oxy, s.ox);
-      });
-    };
-  }
-
-  lab.ready.push(() => {
-    const a = document.getElementById('lung3d'), b = document.getElementById('alv3d'), c = document.getElementById('hb3d');
-    if (a) buildLungs(a);
-    if (b) buildAlveoli(b);
-    if (c) buildHb(c);
-  });
+  /* بناء مؤجل: لا يُبنى المجسم إلا عند اقتراب القسم من الشاشة */
+  K.lazy = function (el, build) {
+    if (!el) return;
+    let done = false;
+    const go = () => { if (done) return; done = true; setTimeout(async () => { const t0 = performance.now(); try { await build(el); } catch (e) { console.error(e); } if (window.__k3debug) console.info('k3 build ' + el.id + ' ' + Math.round(performance.now() - t0) + 'ms'); }, 30); };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); go(); } }, { rootMargin: '700px 0px' });
+      io.observe(el);
+    } else go();
+  };
 })();
