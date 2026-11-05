@@ -59,6 +59,7 @@
     function tick(t) {
       raf = 0;
       if (!vis || document.hidden) return;
+      if (L.navigating && Date.now() - L.navigating < 500) { last = t; raf = requestAnimationFrame(tick); return; }
       const dt = Math.max(0, Math.min(0.05, (t - last) / 1000 || 0));
       last = t;
       step(dt, t / 1000);
@@ -172,20 +173,29 @@
     });
     L.$$('a', toc).forEach(a => a.addEventListener('click', close));
     /* التنقل داخل الصفحة بالسكربت: يعمل داخل الإطارات ومع تغيّر ارتفاع المحتوى أثناء التمرير */
+    // قفزة فورية: نلغي التمرير الناعم مؤقتاً لأن سفاري يرتد ويُظهر صفحة بيضاء مع المسافات الطويلة
+    const html = document.documentElement;
+    function jump(y) {
+      const prev = html.style.scrollBehavior;
+      html.style.scrollBehavior = 'auto';
+      window.scrollTo(0, y);
+      html.style.scrollBehavior = prev;
+    }
     function go(id) {
       const el = document.getElementById(id); if (!el) return;
       const bar = L.$('.topbar'), off = (bar ? bar.offsetHeight : 60) + 12;
-      const target = () => (id === 'top' ? 0 : Math.max(0, el.getBoundingClientRect().top + window.scrollY - off));
-      const far = Math.abs(target() - window.scrollY) > window.innerHeight * 2.5;
+      const target = () => (id === 'top' ? 0 : Math.max(0, Math.round(el.getBoundingClientRect().top + window.scrollY - off)));
+      const near = Math.abs(target() - window.scrollY) < window.innerHeight * 1.5 && !L.reduce;
       L.navigating = Date.now();
-      window.scrollTo({ top: target(), behavior: L.reduce || far ? 'auto' : 'smooth' });
+      if (near && 'scrollBehavior' in html.style) window.scrollTo({ top: target(), behavior: 'smooth' });
+      else jump(target());
       let tries = 0;
       const fix = () => {
-        const d = target() - window.scrollY;
-        if (Math.abs(d) > 6 && tries++ < 5) window.scrollTo({ top: target(), behavior: 'auto' });
-        if (tries < 5) setTimeout(fix, 450);
+        L.navigating = Date.now();
+        if (Math.abs(target() - window.scrollY) > 6) jump(target());
+        if (++tries < 4) setTimeout(fix, 350);
       };
-      setTimeout(fix, far ? 120 : 800);
+      setTimeout(fix, near ? 700 : 60);
       try { history.replaceState(null, '', '#' + id); } catch (e) {}
     }
     L.go = go;

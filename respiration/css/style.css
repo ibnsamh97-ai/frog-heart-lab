@@ -36,8 +36,7 @@
 :root[data-font="almarai"]{--f-display:"Almarai","Segoe UI",Tahoma,sans-serif;--f-ui:"Almarai","Segoe UI",Tahoma,sans-serif;--f-body:"Almarai","Segoe UI",Tahoma,sans-serif;--fs-read:16.5px;--lh-read:1.95}
 :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:72px}
-@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+html{scroll-padding-top:72px}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:16px;line-height:1.85;direction:rtl}
 /* نص القراءة */
 .lead,.prose p,.prose li,.note p,.card p,.card li,.status,.flip .q,.flip .a,.gloss p,.qz-q,.qz-exp,.v-info{font-family:var(--f-body)}

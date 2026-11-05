@@ -365,7 +365,7 @@ ${GLSL_NOISE}`)
     this.frame = null;
     this._v = new THREE.Vector3();
     lab.loop(el, (dt, t) => {
-      if (this.hold || (lab.navigating && Date.now() - lab.navigating < 900)) return;
+      if (this.hold || (lab.navigating && Date.now() - lab.navigating < 700)) return;
       if (this.frame) this.frame(dt, t);
       if (this.controls) this.controls.update();
       R.render(S, this.camera);
