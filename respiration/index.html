@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مختبر فسلجة التنفس</title>
+<meta name="description" content="الفصل الثالث من فسلجة الحيوان: فسيولوجيا التنفس، بشرح مرتب ومجسمات ثلاثية الأبعاد ومحاكاة تفاعلية واختبار.">
+<meta property="og:title" content="مختبر فسلجة التنفس">
+<meta property="og:image" content="https://ibnsamh97-ai.github.io/frog-heart-lab/respiration/preview.png">
+<meta property="og:description" content="الفصل الثالث من فسلجة الحيوان بشرح مرتب ومجسمات ثلاثية الأبعاد ومحاكاة تفاعلية.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230d7a84'/%3E%3Cpath d='M30 10v16c-3-3-9-6-14 0-5 7-6 20-2 26 3 4 10 2 13-2 2-3 3-8 3-14m4-26v16c3-3 9-6 14 0 5 7 6 20 2 26-3 4-10 2-13-2-2-3-3-8-3-14' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Aref+Ruqaa:wght@700&family=Cairo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <button class="toc-btn" id="tocBtn" type="button" aria-controls="toc" aria-expanded="false">الفهرس</button>
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--accent)"/><path d="M30 10v16c-3-3-9-6-14 0-5 7-6 20-2 26 3 4 10 2 13-2 2-3 3-8 3-14m4-26v16c3-3 9-6 14 0 5 7 6 20 2 26-3 4-10 2-13-2-2-3-3-8-3-14" fill="none" stroke="var(--accent-ink)" stroke-width="4" stroke-linecap="round"/></svg>
+      <b>مختبر فسلجة التنفس</b>
+    </a>
+    <span class="top-sec" id="topSec">الفصل الثالث</span>
+    <button class="font-btn" id="fontBtn" type="button" title="تغيير نوع الخط"><span class="aa">أ</span><span id="fontName">نسخ</span></button>
+  </div>
+  <div class="progress"><i id="progress"></i></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="فهرس الفصل">
+    <h2>فهرس الفصل الثالث</h2>
+    <ol>
+      <li><a href="#s1"><span class="n">01</span>التنفس وعملياته الثلاث</a></li>
+      <li><a href="#s2"><span class="n">02</span>وسائل التنفس في الحيوانات</a></li>
+      <li><a href="#s3"><span class="n">03</span>الرئتان وغشاء الجنب</a></li>
+      <li><a href="#s4"><span class="n">04</span>مسار الهواء والأسناخ</a></li>
+      <li><a href="#s5"><span class="n">05</span>الشد السطحي</a></li>
+      <li><a href="#s6"><span class="n">06</span>الشهيق والزفير</a></li>
+      <li><a href="#s7"><span class="n">07</span>الحجوم التنفسية</a></li>
+      <li><a href="#s8"><span class="n">08</span>معدل وحجم التنفس</a></li>
+      <li><a href="#s9"><span class="n">09</span>تهوية الأسناخ وكيمياء التنفس</a></li>
+      <li><a href="#s10"><span class="n">10</span>نقل الأوكسجين</a></li>
+      <li><a href="#s11"><span class="n">11</span>الهيموكلوبين</a></li>
+      <li><a href="#s12"><span class="n">12</span>العوامل المؤثرة وتأثير بور</a></li>
+      <li><a href="#review"><span class="n">✓</span>المراجعة والاختبار</a></li>
+    </ol>
+  </nav>
+
+  <main id="top">
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div>
+        <div class="eyebrow">فسلجة الحيوان النظري · الفصل الثالث · ص 92–112</div>
+        <h1>فسلجة <em>التنفس</em></h1>
+        <p class="lead">الفصل كاملاً من الكتاب بشرح مرتب ومحاكاة تتحكم بها: من التهوية الرئوية إلى الأسناخ والحجوم التنفسية، ثم نقل الأوكسجين بالهيموكلوبين وتأثير بور. المهم مؤشَّر بالأصفر مثل كتابك، وأسئلة «علل» في الهوامش.</p>
+        <div class="hero-facts">
+          <div class="fact"><b class="num">300M</b><span>سنخ في الرئتين (300 مليون)</span></div>
+          <div class="fact"><b class="num">70 m²</b><span>مساحة جدران الأسناخ المتاحة للشعيرات</span></div>
+          <div class="fact"><b class="num">500 cm³</b><span>الحجم المدّي في الراحة</span></div>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="#s1">ابدأ الشرح</a>
+          <a class="btn" href="#review">المراجعة والاختبار</a>
+        </div>
+      </div>
+      <div>
+        <div class="viewer" id="lung3d" aria-label="مجسم ثلاثي الأبعاد للرئتين"></div>
+        <p class="cap" style="margin-top:8px">اسحب لتدوير المجسم · اضغط على فص لمعرفة اسمه</p>
+      </div>
+    </section>
+
+    <!-- ================= S1 ================= -->
+    <section class="sec" id="s1" data-title="التنفس وعملياته الثلاث">
+      <div class="sec-head">
+        <div class="sec-n">01</div>
+        <h2>التنفس وعملياته الثلاث</h2>
+        <div class="sec-meta"><span class="en">Respiration</span><span class="page-ref">الكتاب ص 92–94</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يحتاج جسم الكائن الحي إلى عدد كبير من المواد لكي يعيش، وتكون الحاجة ملحّة بصورة خاصة إلى <mark>الأوكسجين</mark>. تحصل الأنسجة على طاقتها من تحليل المواد المختلفة، والأوكسجين هو الذي يعمل على تحليلها، فلا قيمة للمواد المخزونة ما لم يُجهَّز الجسم بالأوكسجين من المحيط.</p>
+          <p>وتأتي عملية طرح <span class="co2">ثاني أوكسيد الكاربون</span> الناتج من تحليل جزيئات الغذاء (لتحرير الطاقة) بأهمية الحاجة إلى الأوكسجين نفسها، لتخليص الجسم من تأثيره الضار، ويطرحه الجسم بالسرعة نفسها التي يتكوّن بها.</p>
+          <div class="note def"><span class="tag">تعريف</span><p><b>التنفس:</b> عملية تبادل الغازات بين المادة الحية ومحيطها الخارجي.</p></div>
+          <p>وتُستخدم كلمة تنفس بشكل غير مناسب لوصف <mark>ثلاث عمليات</mark> مختلفة تماماً وإن كانت متضامنة في تعاقبها:</p>
+          <ol>
+            <li><b>التهوية الرئوية</b> <span class="en">Pulmonary Ventilation</span>: حركة الهواء داخل الرئتين وخروجه منهما.</li>
+            <li><b>التنفس الرئوي والتنفس الداخلي</b> <span class="en">Pulmonary and Internal Respiration</span>: انتقال الغازات التنفسية <span class="u">بالانتشار</span> بين الأسناخ والدم، ونقل الأوكسجين بالدم من الرئتين إلى الأنسجة والعودة بثاني أوكسيد الكاربون، وأخيراً انتقال الأوكسجين من الدم إلى الخلايا بالانتشار أيضاً، وانتقال ثاني أوكسيد الكاربون من الخلايا إلى الدم بالطريقة نفسها.</li>
+            <li><b>التنفس الخلوي</b> <span class="en">Cellular Respiration</span>: تحرير الطاقة بعملية الهدم الغذائي، وهو <mark>ذروة عملية التنفس بأكملها</mark>، ويشتمل على خطوات كثيرة تشترك فيها الخمائر التنفسية ومساعداتها.</li>
+          </ol>
+          <p>ويُنقل ثاني أوكسيد الكاربون الذي تنتجه الأنسجة بالدم حيث تطرحه الرئتان، <span class="u">بالاتجاه المضاد</span> للعمليات السابقة.</p>
+          <div class="note key"><span class="tag">سؤال متوقع</span><p>صنّف عمليات التنفس إلى ثلاث، وعرّف كل واحدة منها.</p></div>
+        </div>
+        <div class="sim" id="flowSim">
+          <div class="sim-h"><h3>رحلة الغازين بين الجو والخلية</h3><span class="kind">محاكاة</span></div>
+          <div id="flow"></div>
+          <div class="ctrls" id="flowBtns"></div>
+          <div class="status" id="flowInfo"></div>
+          <div class="legend"><span><i style="background:var(--o2)"></i>أوكسجين O₂</span><span><i style="background:var(--co2)"></i>ثاني أوكسيد الكاربون CO₂</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S2 ================= -->
+    <section class="sec" id="s2" data-title="وسائل التنفس في الحيوانات">
+      <div class="sec-head">
+        <div class="sec-n">02</div>
+        <h2>وسائل التنفس في الحيوانات</h2>
+        <div class="sec-meta"><span class="page-ref">الكتاب ص 94</span></div>
+      </div>
+      <div class="cards" id="animalCards">
+        <div class="card">
+          <svg class="ic" viewBox="0 0 200 84" aria-hidden="true"><path d="M60 42c0-20 22-30 42-26 18 3 30 0 40 12 10 13 2 30-14 34-14 4-24 10-40 6-18-4-28-10-28-26z" fill="var(--co2-soft)" stroke="var(--co2)" stroke-width="2"/><circle cx="104" cy="42" r="9" fill="var(--co2)" opacity=".5"/><g fill="var(--o2)"><circle cx="40" cy="30" r="3.5"/><circle cx="38" cy="54" r="3.5"/><circle cx="168" cy="36" r="3.5"/><circle cx="166" cy="58" r="3.5"/></g><path d="M44 30h12M42 54h14M164 36h-12M162 58h-12" stroke="var(--o2)" stroke-width="2" stroke-dasharray="3 3"/></svg>
+          <h4>حيوانات واطئة</h4>
+          <ul><li>لا أعضاء للتنفس، ولا دم، ولا صبغات تنفسية.</li><li>نسبة مساحة سطح الجسم إلى كتلته <b>عالية</b>، فيصل الأوكسجين بالسرعة المطلوبة إلى كل الجسم.</li><li>احتياجها للأوكسجين محدود لأن معدل أيضها الغذائي واطئ.</li></ul>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 200 84" aria-hidden="true"><path d="M20 50c20-22 40-22 60-6s40 16 60 0 32-14 42-6" fill="none" stroke="var(--tissue-2)" stroke-width="16" stroke-linecap="round"/><path d="M20 50c20-22 40-22 60-6s40 16 60 0 32-14 42-6" fill="none" stroke="var(--tissue)" stroke-width="11" stroke-linecap="round"/><g stroke="var(--tissue-2)" stroke-width="1.5" opacity=".7"><path d="M40 38v14M56 34v14M72 38v14M92 46v14M108 48v14M124 46v14M144 40v14M160 36v14"/></g><path d="M20 50c20-22 40-22 60-6s40 16 60 0 32-14 42-6" fill="none" stroke="var(--o2)" stroke-width="2" stroke-dasharray="4 5"/></svg>
+          <h4>الديدان الحلقية</h4>
+          <ul><li>حيوانات أكثر رقياً لها <b>دورة دموية</b>.</li><li>ليس لديها أعضاء للتنفس.</li><li>دمها يحتوي على <b>صبغة تنفسية</b>.</li></ul>
+        </div>
+        <div class="card">
+          <svg class="ic" viewBox="0 0 200 84" aria-hidden="true"><g fill="none" stroke="var(--o2)" stroke-width="3" stroke-linecap="round"><path d="M50 14v22M50 36c-8 6-14 16-14 30M50 36c8 6 14 16 14 30M36 66c-6 4-10 8-10 12M36 66c4 4 6 8 6 12M64 66c-4 4-6 8-6 12M64 66c6 4 10 8 10 12"/></g><g fill="none" stroke="var(--co2)" stroke-width="2.5" stroke-linecap="round"><path d="M110 20c10 4 10 40 0 46M118 20c10 4 10 40 0 46M126 20c10 4 10 40 0 46"/></g><g fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"><path d="M160 42h30M168 42v-16M176 42v18M184 42v-12M168 26h-6M176 60h6M184 30h6"/></g><text x="50" y="82" text-anchor="middle" class="sv-sm">رئات</text><text x="120" y="82" text-anchor="middle" class="sv-sm">غلاصم</text><text x="176" y="82" text-anchor="middle" class="sv-sm">قصيبات</text></svg>
+          <h4>الحيوانات الأكثر تطوراً</h4>
+          <ul><li><b>صبغات تنفسية</b> تزيد كفاءة الدم في نقل O₂ وCO₂.</li><li><b>أعضاء خاصة للتنفس:</b> الغلاصم، الرئات، القصيبات (في الحشرات).</li></ul>
+        </div>
+      </div>
+      <div class="cols" style="margin-top:22px">
+        <div class="prose">
+          <p>وظيفة <mark>الغلاصم والرئات</mark> توفير سطح واسع من غشاء مخاطي يتم من خلاله التبادل الغازي بين المحيط الخارجي والدم. ويؤدي <b>الجهاز القصبي</b> في الحشرات وظيفة الغلاصم والرئات، لكنه يختلف عنهما في أن الهواء يصل بوساطته إلى كل خلية من خلايا الجسم حاملاً لها الأوكسجين وعائداً منها بثاني أوكسيد الكاربون.</p>
+          <div class="note why"><span class="tag">علل</span><p class="q">لا تمتلك بعض الحيوانات الواطئة أي أعضاء للتنفس أو دم أو صبغات تنفسية.</p><p class="a">لأن نسبة مساحة سطح الجسم إلى كتلتها عالية، فيصل الأوكسجين بالسرعة المطلوبة إلى جميع أنحاء الجسم، ولأن احتياجها للأوكسجين محدود نسبياً لأن معدل أيضها الغذائي واطئ.</p></div>
+          <div class="note why"><span class="tag">قارن</span><p class="q">بين الجهاز القصبي في الحشرات والرئات أو الغلاصم.</p><p class="a">كلها توفر سطحاً للتبادل الغازي، لكن في الجهاز القصبي يصل الهواء نفسه إلى كل خلية حاملاً الأوكسجين وعائداً بثاني أوكسيد الكاربون، أما الرئات والغلاصم فالتبادل يتم فيها بين المحيط والدم.</p></div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>كبّر الجسم وراقب وصول الأوكسجين</h3><span class="kind">محاكاة · للفهم</span></div>
+          <div id="sav"></div>
+          <div class="ctrls"><div class="range"><label for="savSize">حجم الجسم (طول الضلع)<b id="savSizeV">2</b></label><input id="savSize" type="range" min="1" max="10" step="0.5" value="2"></div></div>
+          <div class="readout" id="savRO"></div>
+          <div class="status" id="savMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S3 ================= -->
+    <section class="sec" id="s3" data-title="الرئتان وغشاء الجنب">
+      <div class="sec-head">
+        <div class="sec-n">03</div>
+        <h2>الرئتان وغشاء الجنب</h2>
+        <div class="sec-meta"><span class="en">Thoracic Cavity · Pleura</span><span class="page-ref">الكتاب ص 95 · شكل 3‑1</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يتنفس الإنسان بالرئتين الواقعتين في <span class="t">التجويف الصدري<i>Thoracic Cavity</i></span>. <mark>تتكون الرئة اليمنى من ثلاثة فصوص بينما تتكون الرئة اليسرى من فصين</mark>، ويُجهَّز كل فص بتجهيز هوائي ودموي خاص به.</p>
+          <p>وتُحاط الرئتان بغشاء مصلي <b>مزدوج</b> <span class="en">Serous membrane</span> يعرف بغشاء الجنب <span class="en">Pleura</span>:</p>
+          <ul>
+            <li><b>غشاء الجنب الحشوي</b> <span class="en">Visceral Pleura</span>: الغشاء الذي يحيط بالرئتين.</li>
+            <li><b>غشاء الجنب الجداري</b> <span class="en">Parietal Pleura</span>: الغشاء المصلي المبطن لتجويف القفص الصدري.</li>
+            <li><b>التجويف الجنبي</b> <span class="en">Pleural Cavity</span>: <mark>الفسحة الكائنة بين الطبقتين</mark>، وهي فسحة رقيقة يملؤها سائل انزلاقي لمفاوي يفرزه غشاء الجنب، يعمل على منع احتكاك الغشاءين الجنبيين خلال الشهيق الذي تتمدد فيه الرئتان.</li>
+          </ul>
+          <div class="note def"><span class="tag">ذات الجنب</span><p><b>Pleurisy:</b> التهاب الغشاءين الجنبيين، ومن أعراضه <b>الآلام الجنبية</b> خلال عملية الشهيق.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">وجود سائل انزلاقي في التجويف الجنبي.</p><p class="a">لمنع احتكاك الغشاءين الجنبيين خلال عملية الشهيق التي تتمدد فيها الرئتان.</p></div>
+          <div class="sim">
+            <div class="sim-h"><h3>جرّب: الغشاءان مع السائل وبدونه</h3><span class="kind">محاكاة</span></div>
+            <svg class="fig" id="friction" viewBox="0 0 520 190" role="img" aria-label="غشاءا الجنب ينزلقان على بعضهما"></svg>
+            <div class="ctrls"><div class="seg" id="fricSeg"><button type="button" aria-pressed="true" data-v="fluid">مع السائل الجنبي</button><button type="button" aria-pressed="false" data-v="dry">بدون سائل (ذات الجنب)</button></div></div>
+            <div class="status" id="fricMsg"></div>
+          </div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>التجويف الصدري والأغشية المحيطة به</h3><span class="kind">شكل 3‑1 تفاعلي</span></div>
+          <svg class="fig" id="pleuraFig" viewBox="0 0 600 560" role="img" aria-label="رسم الرئتين وغشاء الجنب"></svg>
+          <div class="ctrls">
+            <button class="btn" type="button" id="pleuraGap" aria-pressed="false">تكبير التجويف الجنبي</button>
+            <button class="btn" type="button" id="pleuraLobes" aria-pressed="true">إظهار الفصوص</button>
+            <a class="btn" href="#top">المجسم ثلاثي الأبعاد</a>
+          </div>
+          <div class="status" id="pleuraInfo">اضغط على أي جزء من الرسم لمعرفة اسمه ووظيفته.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S4 ================= -->
+    <section class="sec" id="s4" data-title="مسار الهواء والأسناخ">
+      <div class="sec-head">
+        <div class="sec-n">04</div>
+        <h2>مسار الهواء والأسناخ</h2>
+        <div class="sec-meta"><span class="en">Alveolar sacs · Alveoli</span><span class="page-ref">الكتاب ص 96–97 · شكل 3‑2 و3‑3</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يدخل الهواء من فتحتي المنخرين اللذين يعملان على <mark>تصفية وترطيب وتعديل درجة حرارة</mark> الهواء الداخل. ويمر الهواء بالبلعوم والحنجرة والقصبة الهوائية والقصبات التي تنتهي بفروع أدق تشكّل في نهاياتها جيوباً تسمى <span class="t">الأكياس السنخية<i>Alveolar sacs</i></span>.</p>
+          <p>وتتسع جدران هذه الجيوب مكوّنة <span class="t">الأسناخ<i>Alveoli</i></span> التي يبلغ عددها <mark>300 مليون</mark> حجيرة تكوّن كلا الرئتين. قطر الواحدة منها حوالي <mark>0.2 ملم</mark>، وتحاط بجدار من <b>صف واحد من الخلايا الطلائية المسطحة</b> يغطيه فلم رقيق من سائل خاص يجعل السطح رطباً دائماً، وتغذيه من الخارج شبكة من الأوعية الشعرية الرئوية. وتبلغ مساحة جدران الأسناخ المتاحة للأوعية الشعرية <mark>70 م²</mark>.</p>
+          <div class="sim">
+            <div class="sim-h"><h3>رحلة جزيئة الهواء</h3><span class="kind">محاكاة</span></div>
+            <svg class="fig" id="airway" viewBox="0 0 520 470" role="img" aria-label="مسار الهواء من الأنف إلى الأسناخ"></svg>
+            <div class="stations" id="stations"></div>
+            <div class="status" id="stationInfo"></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>نهاية القصيبة والأكياس السنخية</h3><span class="kind">مجسم ثلاثي الأبعاد · شكل 3‑2</span></div>
+            <div class="viewer wide" id="alv3d" aria-label="مجسم ثلاثي الأبعاد للأسناخ والشعيرات"></div>
+            <div class="legend"><span><i style="background:var(--co2)"></i>دم قادم غير مؤكسج</span><span><i style="background:var(--o2)"></i>دم مؤكسج خارج</span><span><i style="background:var(--tissue)"></i>جدار السنخ</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cols rev" style="margin-top:24px">
+        <div class="prose">
+          <h3>خلايا جدار السنخ</h3>
+          <p>يضم جدار الأسناخ الطلائي <mark>نوعين من الخلايا</mark>: الأول خلايا <b>مسطحة</b> مفروشة السايتوبلازم، والثاني خلايا <b>أكثر سمكاً</b> تحتوي على عدد من الصفائح.</p>
+          <p>وتفرز الخلايا السميكة <mark class="g">البروتينات الفوسفاتية</mark> التي تنظم انتفاخ الرئتين وبقاء قنواتها وأسناخها مفتوحة. إضافة إلى ما تحتويه الرئتان من <b>خلايا لفاوية كبيرة</b> و<b>خلايا حلمية</b> (التي تحتوي الهيبارين) وأنواع من الدهون والهستامين ومركبات متعددة الببتيدات المشتركة في تفاعلات الحساسية.</p>
+          <div class="note why"><span class="tag">علل</span><p class="q">تبقى الأسناخ مفتوحة في الرئتين.</p><p class="a">لاحتواء جدارها على خلايا تفرز البروتينات الفوسفاتية التي تنظم انتفاخ الرئتين وبقاء قنواتها وأسناخها مفتوحة.</p></div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>مقطع في جدار الحويصلة والوعاء الشعري</h3><span class="kind">شكل 3‑3 متحرك</span></div>
+          <svg class="fig" id="wall" viewBox="0 0 600 380" role="img" aria-label="تبادل الغازات عبر جدار السنخ"></svg>
+          <div class="ctrls"><button class="btn" type="button" id="wallPlay" aria-pressed="true">إيقاف مؤقت</button><div class="seg" id="wallSeg"><button type="button" aria-pressed="true" data-v="all">الغازان</button><button type="button" aria-pressed="false" data-v="o2">O₂ فقط</button><button type="button" aria-pressed="false" data-v="co2">CO₂ فقط</button></div></div>
+          <div class="status" id="wallInfo">اضغط على أي خلية في المقطع لتعرف نوعها.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S5 ================= -->
+    <section class="sec" id="s5" data-title="الشد السطحي">
+      <div class="sec-head">
+        <div class="sec-n">05</div>
+        <h2>الشد السطحي في الأسناخ</h2>
+        <div class="sec-meta"><span class="en">Surface tension</span><span class="page-ref">الكتاب ص 97–98 · شكل 3‑4</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>لا تتساوى حجوم جميع الأسناخ في الرئتين، وهذا يجعل قوى <mark>الشد السطحي</mark> متمكنة من جعل ضغط الهواء في <b>الأسناخ الصغيرة أعلى</b> منه في الأسناخ الكبيرة الحجم.</p>
+          <p>ولما كان المفروض أن يكون الضغط في جميع فصوص الرئتين متساوياً، أصبحت الأسناخ الصغيرة <b>صعبة الانتفاخ</b> في حين تكون الأسناخ الكبيرة <b>سهلة الانتفاخ</b>. ولهذا السبب <mark>تضمر الأسناخ الصغيرة تدريجياً دافعة الهواء إلى الأسناخ الكبيرة</mark> التي تنتفخ تدريجياً.</p>
+          <div class="note"><span class="tag" style="color:var(--accent)">للفهم</span><p>يتبع الضغط داخل فقاعة مبللة قانون لابلاس: <span class="num">P = 2T / r</span>. كلما صغر نصف القطر <span class="num">r</span> زاد الضغط. والبروتينات الفوسفاتية تقلل الشد السطحي <span class="num">T</span> في الأسناخ الصغيرة أكثر، فيتقارب الضغط وتبقى الأسناخ مفتوحة. جرّب ذلك في المحاكاة.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">ضغط الهواء في الأسناخ الصغيرة أعلى منه في الأسناخ الكبيرة.</p><p class="a">بسبب قوى الشد السطحي، لأن حجوم الأسناخ غير متساوية.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">تضمر الأسناخ الصغيرة تدريجياً وتنتفخ الكبيرة.</p><p class="a">لأن ضغط الهواء في الصغيرة أعلى فتصبح صعبة الانتفاخ، فتدفع هواءها إلى الأسناخ الكبيرة السهلة الانتفاخ.</p></div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>سنخان متصلان: من يفرغ في من؟</h3><span class="kind">محاكاة · شكل 3‑4</span></div>
+          <svg class="fig" id="laplace" viewBox="0 0 600 400" role="img" aria-label="سنخ صغير وسنخ كبير متصلان"></svg>
+          <div class="ctrls">
+            <div class="seg" id="lapSeg"><button type="button" aria-pressed="true" data-v="0">بدون مادة فعالة سطحياً</button><button type="button" aria-pressed="false" data-v="1">مع البروتينات الفوسفاتية</button></div>
+            <button class="btn primary" type="button" id="lapRun">ابدأ</button>
+            <button class="btn" type="button" id="lapReset">إعادة</button>
+          </div>
+          <div class="ctrls"><div class="range"><label for="lapR">نصف قطر السنخ الصغير في البداية<b id="lapRV">0.6</b></label><input id="lapR" type="range" min="0.35" max="0.95" step="0.05" value="0.6"></div></div>
+          <div class="readout" id="lapRO"></div>
+          <div class="status" id="lapMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S6 ================= -->
+    <section class="sec" id="s6" data-title="الشهيق والزفير">
+      <div class="sec-head">
+        <div class="sec-n">06</div>
+        <h2>آلية الشهيق والزفير</h2>
+        <div class="sec-meta"><span class="en">Inspiration · Expiration</span><span class="page-ref">الكتاب ص 98–99</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يجدد الإنسان البالغ الهواء في كل <span class="t">شهيق<i>Inspiration</i></span> بتقلص <mark>العضلات بين الأضلاع</mark> التي ترفع جدار الصدر عالياً وإلى الأمام، وبتقلص عضلة <span class="t">الحجاب الحاجز<i>Diaphragm</i></span> التي تدفعه نحو الأسفل ضاغطة على المحتويات البطنية.</p>
+          <p>نتيجة تقلص العضلات ما بين الأضلاع تأخذ الأضلاع <b>وضعاً أفقياً</b> بعد أن كانت مائلة إلى الأسفل قليلاً، وتتقدم نهاياتها إلى الأمام، فيتوسع القفص الصدري. ويأخذ الحجاب الحاجز عند تقلصه وضعاً <b>أفقياً (مستوياً)</b> بعد أن كان <b>محدباً إلى الأعلى</b>، فيتوسع القفص الصدري أيضاً، وبذلك <mark>ينخفض الضغط في تجاويف الجنب وداخل الأسناخ فيدخل الهواء</mark> إلى الرئتين.</p>
+          <p>أما <span class="t">الزفير<i>Expiration</i></span> فيتم نتيجة ارتخاء العضلات التنفسية ورجوع الأضلاع والحجاب الحاجز إلى وضعها الطبيعي، فيقل حجم الصدر والرئتين ويخرج الهواء.</p>
+          <div class="tbl"><table>
+            <thead><tr><th></th><th>الشهيق</th><th>الزفير</th></tr></thead>
+            <tbody>
+              <tr><td>العضلات بين الأضلاع</td><td>تتقلص</td><td>ترتخي</td></tr>
+              <tr><td>الأضلاع</td><td>أفقية ونهاياتها للأمام</td><td>تعود مائلة للأسفل</td></tr>
+              <tr><td>الحجاب الحاجز</td><td>يتقلص ويصبح مستوياً</td><td>يرتخي ويعود محدباً</td></tr>
+              <tr><td>حجم الصدر</td><td>يزداد</td><td>يقل</td></tr>
+              <tr><td>الضغط داخل الأسناخ</td><td>ينخفض</td><td>يرتفع</td></tr>
+              <tr><td>نوع العملية</td><td><b>إيجابية</b> تحتاج طاقة</td><td><b>سلبية</b></td></tr>
+            </tbody>
+          </table></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">يعتبر الشهيق عملية إيجابية والزفير عملية سلبية.</p><p class="a">الشهيق يحتاج إلى جهد عضلي يُصرف فيه طاقة، أما الزفير فيتم نتيجة ارتخاء العضلات التنفسية ورجوع الأضلاع والحجاب الحاجز إلى وضعها الطبيعي.</p></div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>القفص الصدري من الجانب</h3><span class="kind">محاكاة</span></div>
+          <svg class="fig" id="mech" viewBox="0 0 600 470" role="img" aria-label="حركة الأضلاع والحجاب الحاجز"></svg>
+          <div class="ctrls">
+            <div class="seg" id="mechMode"><button type="button" aria-pressed="true" data-v="auto">تنفس تلقائي</button><button type="button" aria-pressed="false" data-v="hold">أتحكم أنا</button></div>
+            <button class="btn primary" type="button" id="mechHold" hidden>اضغط مطولاً للشهيق</button>
+          </div>
+          <div class="readout" id="mechRO"></div>
+          <div class="status" id="mechMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S7 ================= -->
+    <section class="sec" id="s7" data-title="الحجوم التنفسية">
+      <div class="sec-head">
+        <div class="sec-n">07</div>
+        <h2>الحجوم التنفسية</h2>
+        <div class="sec-meta"><span class="en">Respiratory Volumes</span><span class="page-ref">الكتاب ص 98–102 · جدول 3‑1 · شكل 3‑5 و3‑6</span></div>
+      </div>
+      <div class="prose" style="max-width:none;margin-bottom:18px">
+        <p>يتجدد هواء الأسناخ بمعدل يوازي استهلاك الأوكسجين وإنتاج ثاني أوكسيد الكاربون، لكي يبقى <b>الضغط الجزئي للأوكسجين (PO₂) عالياً وثابتاً</b> والضغط الجزئي لثاني أوكسيد الكاربون واطئاً وثابتاً في الراحة والإجهاد. ويقاس حجم الهواء الداخل إلى الرئتين أو الخارج منهما بوساطة <span class="t">جهاز قياس التنفس<i>Respirometer</i></span>.</p>
+      </div>
+      <div class="sim">
+        <div class="sim-h"><h3>جهاز قياس التنفس ومخطط الحجوم</h3><span class="kind">محاكاة · شكل 3‑5 و3‑6</span></div>
+        <div class="cols" style="gap:16px">
+          <svg class="fig" id="spiroDev" viewBox="0 0 420 430" role="img" aria-label="جهاز قياس التنفس"></svg>
+          <div class="stack" style="gap:10px">
+            <canvas class="fig" id="spiroCv" height="300" aria-label="مخطط الحجوم الرئوية"></canvas>
+            <div class="ctrls">
+              <div class="seg" id="spiroSex"><button type="button" aria-pressed="true" data-v="m">رجل بالغ</button><button type="button" aria-pressed="false" data-v="f">امرأة بالغة</button></div>
+            </div>
+            <div class="ctrls" id="spiroBtns">
+              <button class="btn" type="button" data-a="normal">تنفس اعتيادي</button>
+              <button class="btn" type="button" data-a="in">أعمق شهيق</button>
+              <button class="btn" type="button" data-a="out">أعمق زفير</button>
+              <button class="btn primary" type="button" data-a="vc">قِس السعة الحيوية</button>
+            </div>
+            <div class="status" id="spiroMsg">الشخص يتنفس تنفساً اعتيادياً. جرّب الأزرار لقياس الحجوم الاحتياطية.</div>
+          </div>
+        </div>
+      </div>
+      <div class="cols" style="margin-top:22px">
+        <div class="prose">
+          <h3>تعاريف الحجوم</h3>
+          <div class="note def"><span class="tag">الحجم المدّي</span><p><span class="en">Tidal Volume</span> الهواء الذي يجدده الإنسان في كل حركة تنفسية عند الراحة: <mark>500 سم³</mark>. يعتمد مقداره على <b>نشاط العضلات</b> بالدرجة الرئيسة.</p></div>
+          <div class="note def"><span class="tag">الاحتياطي للشهيق</span><p><span class="en">Inspiratory Reserve Volume</span> كمية إضافية يأخذها الإنسان فوق الحجم المدّي، لاإرادياً في الإجهاد أو إرادياً في الراحة: <mark>3300 سم³</mark> عند الرجل البالغ و<mark>1900 سم³</mark> عند المرأة.</p></div>
+          <div class="note def"><span class="tag">الاحتياطي للزفير</span><p><span class="en">Expiratory Reserve Volume</span> كمية إضافية يطردها الإنسان بعد كل زفير اعتيادي: <mark>1000 سم³</mark> للرجل و<mark>700 سم³</mark> للمرأة. وينخفض الحجمان الاحتياطيان بازدياد حجم الهواء المدّي.</p></div>
+          <div class="note def"><span class="tag">السعة الحيوية</span><p><span class="en">Vital Capacity</span> مجموع حجوم الهواء المدّي والاحتياطي للشهيق والاحتياطي للزفير: <mark>4800 سم³</mark> للذكر و<mark>3100 سم³</mark> للأنثى. تُقدَّر بالقياس إلى مساحة سطح الجسم: <span class="num">2.64</span> لتر/م² للرجل و<span class="num">2.09</span> لتر/م² للمرأة. ويزداد الحجم المدّي نظرياً في الإجهاد العنيف حتى يصل إلى حدود السعة الحيوية.</p></div>
+          <div class="note def"><span class="tag">الحجم الثالي (الباقي)</span><p><span class="en">Residual Volume</span> كمية من الهواء تبقى في الرئتين حتى بعد أعمق زفير: <mark>1200 سم³</mark> للرجل و<mark>1100 سم³</mark> للمرأة، ويساعد على استمرار تبادل الغازات بين الدم وهواء الأسناخ خلال الدورة التنفسية الكاملة.</p></div>
+          <div class="note def"><span class="tag">السعة الكلية للرئتين</span><p><span class="en">Total Lung Capacity</span> مجموع السعة الحيوية والحجم الثالي: حوالي <mark>6 لتر</mark> عند الرجل و<mark>4.2 لتر</mark> عند المرأة، وتختلف باختلاف الأفراد.</p></div>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>جدول 3‑1 الحجوم الرئوية (لتر)</h3><span class="kind">مرّر على المخطط لتتلوّن الأسطر</span></div>
+            <div class="tbl"><table id="volTable">
+              <thead><tr><th>الحجم الرئوي</th><th>عند الرجل</th><th>عند المرأة</th></tr></thead>
+              <tbody>
+                <tr data-k="tv"><td>الحجم المدّي <span class="en">TV</span></td><td class="n">0.5</td><td class="n">0.5</td></tr>
+                <tr data-k="irv"><td>الاحتياطي للشهيق <span class="en">IRV</span></td><td class="n">3.3</td><td class="n">1.9</td></tr>
+                <tr data-k="erv"><td>الاحتياطي للزفير <span class="en">ERV</span></td><td class="n">1.0</td><td class="n">0.7</td></tr>
+                <tr data-k="vc"><td>السعة الحيوية <span class="en">VC</span></td><td class="n">4.8</td><td class="n">3.1</td></tr>
+                <tr data-k="rv"><td>الحجم الثالي <span class="en">RV</span></td><td class="n">1.2</td><td class="n">1.1</td></tr>
+                <tr data-k="tlc"><td>سعة الرئة الكلية <span class="en">TLC</span></td><td class="n">6.0</td><td class="n">4.2</td></tr>
+              </tbody>
+            </table></div>
+            <div class="status"><b>السعة الحيوية</b> = المدّي + الاحتياطي للشهيق + الاحتياطي للزفير<br><b>السعة الكلية</b> = السعة الحيوية + الحجم الثالي</div>
+          </div>
+          <div class="sim">
+            <div class="sim-h"><h3>أين تذهب الـ 500 سم³؟</h3><span class="kind">الحيز الميت</span></div>
+            <svg class="fig" id="dead" viewBox="0 0 520 120" role="img" aria-label="الحيز الميت من الحجم المدّي"></svg>
+            <div class="note key"><span class="tag">مما تجدر الإشارة إليه</span><p>(1) حوالي <b>150 سم³</b> من الحجم المدّي يبقى في ممرات الأنف والرغامي والقصبات وباقي الممرات التنفسية حيث <b>لا يتم تبادل غازي</b>، ويسمى <mark>الحيز الميت</mark> <span class="en">Deadspace</span>.<br>(2) لا يمكن تفريغ الرئتين كلياً من الهواء إطلاقاً، حتى بعد استئصالهما من الجسم.</p></div>
+          </div>
+          <div class="sim">
+            <div class="sim-h"><h3>السعة الحيوية ومساحة سطح الجسم</h3><span class="kind">حاسبة</span></div>
+            <div class="ctrls"><div class="range"><label for="bsa">مساحة سطح الجسم (م²)<b id="bsaV">1.8</b></label><input id="bsa" type="range" min="1.2" max="2.4" step="0.05" value="1.8"></div></div>
+            <div class="readout" id="bsaRO"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S8 ================= -->
+    <section class="sec" id="s8" data-title="معدل وحجم التنفس">
+      <div class="sec-head">
+        <div class="sec-n">08</div>
+        <h2>معدل وحجم التنفس</h2>
+        <div class="sec-meta"><span class="en">Rate and Volume of Breathing</span><span class="page-ref">الكتاب ص 103</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يتراوح معدل التنفس (الحركات التنفسية) الطبيعي في الإنسان البالغ بين <mark>12 و18 حركة/دقيقة</mark>، لكنه عرضة لتغير كبير يتراوح بين 5 و22/دقيقة، ويختلف تبعاً لعوامل منها العمر: <b>40–70/د</b> عند حديثي الولادة، <b>25/د</b> بعمر 5 سنوات، <b>20/د</b> عند الأولاد بعمر 15 سنة، <b>16/د</b> عند الرجال بعمر 30 سنة، بينما نراه <b>غير منتظم</b> عند كبار السن.</p>
+          <p>ويختلف كذلك باختلاف الوضع الفسيولوجي: في أثناء الإجهاد أو الرياضة قد يصل إلى <b>100/دقيقة</b>، ويكون عند الشخص النائم أقل مما عنده في حالة يقظته. ويكون عددها عند <b>النساء أكثر</b> منه عند الرجال بمقدار <b>2–4/دقيقة</b>.</p>
+          <div class="note key"><span class="tag">تزداد الحركات التنفسية بفعل</span><p>(1) الإجهاد العضلي <span class="en">muscular exertion</span> (2) ارتفاع درجة حرارة الجسم (3) الحالة العاطفية.</p></div>
+          <h3>حجم الدقيقة التنفسي</h3>
+          <p>تقاس كمية الهواء الداخل والخارج من الرئتين في الدقيقة الواحدة بقياس معدل وعمق الحركات التنفسية، وتسمى <span class="t">حجم الدقيقة التنفسي<i>Respiratory Minute Volume</i></span>، ويبلغ عند الذكر البالغ في الراحة <mark>6 لتر/دقيقة</mark>. غير أن حجم الدقيقة الفعال، ويسمى <span class="t">تهوية الأسناخ<i>Alveolar Ventilation</i></span>، يبلغ حوالي <mark>4.2 لتر/دقيقة</mark> بسبب وجود الحيز الميت.</p>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>معدل التنفس حسب العمر والحالة</h3><span class="kind">محاكاة</span></div>
+            <div class="seg" id="rateSeg"></div>
+            <canvas class="fig" id="rateCv" height="170" aria-label="مخطط حركات التنفس"></canvas>
+            <div class="ctrls"><div class="seg" id="rateSex"><button type="button" aria-pressed="true" data-v="m">ذكر</button><button type="button" aria-pressed="false" data-v="f">أنثى (+2–4)</button></div></div>
+            <div class="readout" id="rateRO"></div>
+          </div>
+          <div class="sim">
+            <div class="sim-h"><h3>احسب حجم الدقيقة وتهوية الأسناخ</h3><span class="kind">حاسبة</span></div>
+            <div class="ctrls">
+              <div class="range"><label for="mvRate">معدل التنفس (حركة/دقيقة)<b id="mvRateV">12</b></label><input id="mvRate" type="range" min="5" max="40" step="1" value="12"></div>
+              <div class="range"><label for="mvTv">الحجم المدّي (سم³)<b id="mvTvV">500</b></label><input id="mvTv" type="range" min="200" max="3000" step="50" value="500"></div>
+            </div>
+            <svg class="fig" id="mvBar" viewBox="0 0 520 96" role="img" aria-label="مقارنة حجم الدقيقة بتهوية الأسناخ"></svg>
+            <div class="readout" id="mvRO"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sim" style="margin-top:22px">
+        <div class="sim-h"><h3>مصطلحات وصف معدل وعمق التنفس</h3><span class="kind">اضغط على المصطلح لتشاهد شكل التنفس</span></div>
+        <div class="seg" id="patSeg"></div>
+        <canvas class="fig" id="patCv" height="150" aria-label="شكل التنفس"></canvas>
+        <div class="status" id="patInfo"></div>
+      </div>
+    </section>
+
+    <!-- ================= S9 ================= -->
+    <section class="sec" id="s9" data-title="تهوية الأسناخ وكيمياء التنفس">
+      <div class="sec-head">
+        <div class="sec-n">09</div>
+        <h2>تهوية الأسناخ وكيمياء التنفس</h2>
+        <div class="sec-meta"><span class="en">Alveolar Ventilation · Chemistry of Respiration</span><span class="page-ref">الكتاب ص 104–106 · جدول 3‑2</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <div class="note def"><span class="tag">تهوية الأسناخ</span><p>عملية تجديد هواء الأسناخ بحيث يبقى تركيز الأوكسجين وثاني أوكسيد الكاربون <b>ثابتاً</b> فيها، على الرغم من انتقال الأوكسجين من الأسناخ إلى الدم وانتقال ثاني أوكسيد الكاربون من الدم إلى الأسناخ.</p></div>
+          <p>وتتم التهوية بوساطة حركتي التنفس (الشهيق والزفير) <b>اللاإراديتين</b>، حيث تستمران برتابة في أثناء النوم أو فقدان الوعي، ولكن يمكن للفرد أن يتحكم بعمق وسرعة هذه الحركات <b>إرادياً</b>.</p>
+          <p>يبلغ مقدار هواء الأسناخ المتبادل حوالي <mark>4.2 لتر/دقيقة</mark>، ولما كان <span class="t">الخرج القلبي<i>Cardiac Output</i></span> يساوي <mark>5 لتر/دقيقة</mark> فإن معدل التهوية للوصول إلى حالة التشبع يساوي تقريباً <span class="num">4.2 ÷ 5 ≈ 0.8</span>، وتمثل هذه القيمة <b>المثالية</b> لضمان الأكسجة الفعالة للدم.</p>
+          <h3>كيمياء التنفس</h3>
+          <p>يعد <b>الدم</b> الوسيط بين الأنسجة والمحيط الخارجي. ودُرست التغيرات في الهواء المستنشق بمقارنة هواء الشهيق بهواء الزفير، حيث يختلف حجم وضغط الغازات في هواء الأسناخ، تحت ظروف ثابتة من درجة حرارة <b>صفر مئوي</b> وضغط <b>760 ملم زئبق</b>.</p>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>معدل التهوية = هواء الأسناخ ÷ الخرج القلبي</h3><span class="kind">حاسبة</span></div>
+            <div class="ctrls">
+              <div class="range"><label for="vqA">هواء الأسناخ (لتر/دقيقة)<b id="vqAV">4.2</b></label><input id="vqA" type="range" min="1" max="10" step="0.1" value="4.2"></div>
+              <div class="range"><label for="vqQ">الخرج القلبي (لتر/دقيقة)<b id="vqQV">5.0</b></label><input id="vqQ" type="range" min="2" max="10" step="0.1" value="5"></div>
+            </div>
+            <svg class="fig" id="vq" viewBox="0 0 520 110" role="img" aria-label="مقياس معدل التهوية"></svg>
+          </div>
+          <div class="sim">
+            <div class="sim-h"><h3>جدول 3‑2 الضغط الجزئي للغازات في هواء الأسناخ</h3><span class="kind">اضغط على الغاز</span></div>
+            <svg class="fig" id="dalton" viewBox="0 0 520 150" role="img" aria-label="توزيع 760 ملم زئبق على الغازات"></svg>
+            <div class="tbl"><table id="daltonTbl">
+              <thead><tr><th>هواء الأسناخ</th><th>الحجم %</th><th>الضغط الجزئي (ملم زئبق)</th></tr></thead>
+              <tbody></tbody>
+            </table></div>
+            <div class="status" id="daltonMsg"></div>
+          </div>
+        </div>
+      </div>
+      <div class="note skip" style="margin-top:22px"><span class="tag">مؤشَّر في كتابك: غير داخل في الامتحان</span>
+        <div class="cols even" style="gap:20px">
+          <div class="prose">
+            <p><b>بخار الماء:</b> يتشبع أكثر من 90% من هواء الزفير ببخار الماء عند درجة حرارة الغرفة، بينما تتغير كمية بخار الماء في هواء الشهيق ولكنها عموماً أقل. ويفقد الإنسان حوالي 400 سم³ من الماء خلال التنفس في اليوم، ويحتاج تبخر هذا القدر إلى طاقة حرارية.</p>
+            <p><b>تهوية الغرفة:</b> يستهلك البالغ في الراحة حوالي 250 سم³/دقيقة من الأوكسجين وقد يصل إلى 5000 سم³ في التمارين العنيفة، وينتج حوالي 200 سم³ من ثاني أوكسيد الكاربون، والفرق لأن جزءاً من الأوكسجين يُستعمل في أكسدة الهيدروجين. يستهلك يومياً حوالي 360 لتراً (0.36 م³) يوجد في 1.8 م³ من الهواء، فيكفي أوكسجين غرفة 3×3×2.7 لأكثر من خمسة أيام قبل أن ينزل إلى 12%. وأظهرت التجارب أن الانزعاج سببه أولاً اختلاف نوع الهواء (رطوبته النسبية وحرارته) الذي يحفز الأعصاب الجلدية.</p>
+            <p><b>قانون هنري:</b> تتناسب كمية الغاز المذاب في محلول (بدرجة حرارة ثابتة) مع الضغط الجزئي للغاز الحر فوق المحلول. حجم الغاز المذاب = حجم المحلول × الضغط × معامل الذوبان. وعند رفع الحرارة تقل كمية الغاز المذاب.</p>
+          </div>
+          <div class="sim">
+            <div class="sim-h"><h3>كم يوماً يكفي أوكسجين الغرفة؟</h3><span class="kind">حاسبة</span></div>
+            <div class="ctrls">
+              <div class="range"><label for="roomL">طول الغرفة (م)<b id="roomLV">3</b></label><input id="roomL" type="range" min="2" max="8" step="0.5" value="3"></div>
+              <div class="range"><label for="roomW">عرض الغرفة (م)<b id="roomWV">3</b></label><input id="roomW" type="range" min="2" max="8" step="0.5" value="3"></div>
+              <div class="range"><label for="roomP">عدد الأشخاص<b id="roomPV">1</b></label><input id="roomP" type="range" min="1" max="10" step="1" value="1"></div>
+            </div>
+            <div class="readout" id="roomRO"></div>
+            <p class="cap">بارتفاع 2.7 م، واستهلاك 360 لتراً من الأوكسجين لكل شخص يومياً، حتى ينزل الأوكسجين من 21% إلى 12%.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S10 ================= -->
+    <section class="sec" id="s10" data-title="نقل الأوكسجين">
+      <div class="sec-head">
+        <div class="sec-n">10</div>
+        <h2>نقل الأوكسجين</h2>
+        <div class="sec-meta"><span class="en">Oxygen Transport</span><span class="page-ref">الكتاب ص 108–110 · شكل 3‑7 و3‑8</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يتم تجهيز الدم بالأوكسجين بوساطة الرئتين، ويعتمد <b>تجهيز الأوكسجين للنسيج</b> على عدة عوامل:</p>
+          <ol><li>كمية الأوكسجين الداخل إلى الرئتين.</li><li><mark class="g">الكمية الكافية من الغاز المتبادل.</mark></li><li><mark class="g">كمية الدم القادمة إلى النسيج.</mark></li><li><mark class="g">كفاءة الدم في حمل الأوكسجين.</mark></li></ol>
+          <p>وتتحدد <b>كمية الأوكسجين في الدم</b> بالحالات الآتية:</p>
+          <ol><li><mark class="g">كمية الذائب منه في الدم.</mark></li><li><mark class="g">كمية الهيموكلوبين في الدم.</mark></li><li>درجة ألفة الهيموكلوبين للأوكسجين.</li></ol>
+          <p>غرام واحد من الهيموكلوبين له قابلية الاتحاد بـ <mark>1.3 سم³</mark> من الأوكسجين، فإذا كان لشخص 15 غراماً من الهيموكلوبين في كل 100 سم³ من الدم فإنه يتمكن نظرياً من حمل <span class="num">15 × 1.3 ≈ 20</span> سم³ في كل 100 سم³.</p>
+          <div class="note def"><span class="tag">سعة الأوكسجين</span><p><span class="en">Oxygen Capacity</span> كمية الأوكسجين التي يحملها الدم عندما يكون مشبعاً كلياً بالأوكسجين، وعندما يكون الضغط عالياً جداً.</p></div>
+          <p>وتكون كمية الأوكسجين المحمولة في ضغط <b>100 ملم زئبق</b> بحدود <mark>95–97%</mark> من سعة الأوكسجين، فيحمل الدم <b>19 سم³</b> بدلاً من 20 في كل 100 سم³، ويسمى <mark>محتوى الأوكسجين الشرياني</mark> <span class="en">Arterial Oxygen content</span>.</p>
+          <p>ويوجد <b>14 سم³</b> فقط في كل 100 سم³ من الدم العائد من الأنسجة خلال الأوردة إلى الجانب الأيمن من القلب، فقد هبط المحتوى إلى <b>70%</b> من سعة الأوكسجين لأن الضغط هبط فيه إلى <b>40 ملم زئبق</b>.</p>
+          <p>والعلاقة بين كمية الأوكسجين المحمولة وضغطه ليست خطاً مستقيماً بل منحنٍ على شكل حرف <b>S</b> يعرف بـ<span class="t">منحني افتراق الأوكسجين<i>Oxyhemoglobin Dissociation Curve</i></span>، يوضح العلاقة بين نسبة التشبع <span class="en">Percent Saturation</span> والضغط الجزئي للأوكسجين.</p>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>منحني افتراق الأوكسجين</h3><span class="kind">اسحب النقطة · شكل 3‑7</span></div>
+            <svg class="fig" id="odc" viewBox="0 0 560 400" role="img" aria-label="منحني افتراق الأوكسجين"></svg>
+            <div class="ctrls">
+              <div class="range"><label for="odcP">الضغط الجزئي للأوكسجين (ملم زئبق)<b id="odcPV">100</b></label><input id="odcP" type="range" min="0" max="100" step="1" value="100"></div>
+              <div class="seg" id="odcPre"><button type="button" aria-pressed="false" data-v="100">الرئتان (أ)</button><button type="button" aria-pressed="false" data-v="40">الأنسجة (ب)</button><button type="button" aria-pressed="false" data-v="20">عضلة فاعلة</button></div>
+            </div>
+            <div class="readout" id="odcRO"></div>
+          </div>
+        </div>
+      </div>
+      <div class="cols" style="margin-top:22px">
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>محتوى الدم الأوكسجيني في الدورة</h3><span class="kind">شكل 3‑8 متحرك</span></div>
+            <svg class="fig" id="loop" viewBox="0 0 560 360" role="img" aria-label="محتوى الدم من الأوكسجين بين الرئتين والأنسجة"></svg>
+            <div class="ctrls"><div class="seg" id="loopSeg"><button type="button" aria-pressed="true" data-v="rest">في الراحة</button><button type="button" aria-pressed="false" data-v="ex">أثناء التمرين</button></div></div>
+            <div class="status" id="loopMsg"></div>
+          </div>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>سعة الأوكسجين حسب كمية الهيموكلوبين</h3><span class="kind">حاسبة</span></div>
+            <div class="ctrls"><div class="range"><label for="hbG">الهيموكلوبين (غرام/100 سم³ دم)<b id="hbGV">15</b></label><input id="hbG" type="range" min="6" max="20" step="0.5" value="15"></div></div>
+            <div class="readout" id="hbRO"></div>
+          </div>
+          <div class="sim">
+            <div class="sim-h"><h3>صورتا وجود الأوكسجين في الدم</h3><span class="kind">ص 110</span></div>
+            <svg class="fig" id="forms" viewBox="0 0 520 200" role="img" aria-label="الأوكسجين الذائب والمتحد بالهيموكلوبين"></svg>
+          </div>
+          <div class="note why"><span class="tag">علل</span><p class="q">يترك الدم العضلات الفاعلة ولونه داكن جداً.</p><p class="a">لأن ضغط الأوكسجين في العضلات الفاعلة يهبط إلى 20 ملم زئبق فتستخلص من الدم كمية أكبر من الأوكسجين، فيبقى فيه 4 سم³ فقط في كل 100 سم³، وتُعطى العضلة 15 سم³ بدلاً من 5.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S11 ================= -->
+    <section class="sec" id="s11" data-title="الهيموكلوبين">
+      <div class="sec-head">
+        <div class="sec-n">11</div>
+        <h2>الهيموكلوبين والأكسجة</h2>
+        <div class="sec-meta"><span class="en">Hemoglobin · Heme</span><span class="page-ref">الكتاب ص 110–111</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>يتكون الهيموكلوبين من <mark>أربع وحدات ثانوية</mark>، كل واحدة منها تحتوي على جزيئة <b>هيم</b> <span class="en">Heme</span> متصلة بسلسلة من الببتيدات المتعددة <span class="en">Polypeptide Chain</span>.</p>
+          <p>ويتركب الهيم من <b>البروفيرين البدائي</b> <span class="en">Protoporphyrin IX</span> وذرة حديد بهيئة <b>حديدوز</b>. وتأخذ ذرة الحديد ذرتين من الأوكسجين دون أن تفقد تكافؤها (أي تبقى بصورة حديدوز)، لذلك تعد عملية أخذ الهيموكلوبين للأوكسجين <mark>أكسجة وليست أكسدة</mark>.</p>
+          <div class="note why"><span class="tag">علل</span><p class="q">تعد عملية أخذ الهيموكلوبين للأوكسجين أكسجة وليست أكسدة.</p><p class="a">لأن ذرة الحديد تأخذ ذرتين من الأوكسجين دون أن تفقد تكافؤها، أي تبقى بصورة حديدوز.</p></div>
+          <p>ولما كان الهيموكلوبين مكوّناً من أربع وحدات فإنه يُكتب بصيغة <span class="num">Hb₄</span>، ويتحد بأربع جزيئات من الأوكسجين مكوّناً <span class="num">Hb₄O₈</span>. وتقوم <b>مجموعة الهيم المؤكسجة أولاً بتسهيل أكسجة الجاميع الثلاث الباقية</b> نتيجة تغير البناء البروتيني للكلوبين. ويستغرق التفاعل حوالي <b>0.01 ثانية</b>، وهو قلق (عكوس) في الاتجاهين، ويعتمد مساره على الضغط الجزئي للأوكسجين: <b>الأكسجة</b> عندما يكون عالياً، و<b>التحلل</b> عندما يكون واطئاً.</p>
+          <p>ويصبح الدم مشبعاً تماماً (100%) عندما تكون جميع المواقع على جزيئة الهيموكلوبين متحدة بالأوكسجين، ويكون محتواه مساوياً لسعته للأوكسجين. ولما كان دم الإنسان يحتوي حوالي <b>0.9 ملي مول</b> من الهيم في كل 100 سم³، أصبحت سعة الدم للأوكسجين <span class="num">22.4 × 0.9 = 20.2</span> حجم%.</p>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>جزيئة الهيموكلوبين تتأكسج</h3><span class="kind">مجسم ثلاثي الأبعاد</span></div>
+          <div class="viewer wide" id="hb3d" aria-label="مجسم ثلاثي الأبعاد للهيموكلوبين"></div>
+          <div class="ctrls">
+            <button class="btn primary" type="button" id="hbAdd">أضف جزيئة O₂</button>
+            <button class="btn" type="button" id="hbRem">حرّر جزيئة O₂</button>
+            <div class="range"><label for="hbP">أو غيّر الضغط الجزئي للأوكسجين (ملم زئبق)<b id="hbPV">—</b></label><input id="hbP" type="range" min="0" max="100" step="1" value="0"></div>
+          </div>
+          <svg class="fig" id="hbEq" viewBox="0 0 560 74" role="img" aria-label="معادلات أكسجة الهيموكلوبين"></svg>
+          <div class="status" id="hbMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= S12 ================= -->
+    <section class="sec" id="s12" data-title="العوامل المؤثرة وتأثير بور">
+      <div class="sec-head">
+        <div class="sec-n">12</div>
+        <h2>العوامل المؤثرة في نقل الأوكسجين وتأثير بور</h2>
+        <div class="sec-meta"><span class="en">Bohr effect</span><span class="page-ref">الكتاب ص 111–112 · شكل 3‑9</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p>لدرجة الحرارة والأس الهيدروجيني وضغط ثاني أوكسيد الكاربون <span class="num">(PCO₂)</span> تأثير مباشر على قابلية الدم في نقل الأوكسجين.</p>
+          <h3>أولاً: الحرارة</h3>
+          <p>تؤثر الحرارة تأثيراً مباشراً في درجة ألفة الهيموكلوبين للأوكسجين، و<mark>العلاقة عكسية</mark>: عندما ترتفع حرارة النسيج تقل قابلية اتحاد الهيموكلوبين بالأوكسجين. وهذا مهم فسيولوجياً عندما يمارس الإنسان جهداً أو تمارين رياضية حيث يتطلب الأمر مزيداً من الأوكسجين لتحرير الطاقة.</p>
+          <p>ويحصل العكس عندما تتعرض الأطراف <b>للبرد الشديد</b>، فتزداد الألفة ولا يتحرر أوكسجين كافٍ للأفعال الأيضية في الأطراف، فتفقد قدرتها على تعويض الحرارة المفقودة منها وتنتهي إلى <b>الموت اختناقاً</b>.</p>
+          <h3>ثانياً: الضغط الجزئي لثاني أوكسيد الكاربون</h3>
+          <p>العلاقة <mark>عكسية</mark> بين قابلية اتحاد الهيموكلوبين بالأوكسجين ومقدار <span class="num">PCO₂</span>. وتكمن أهميتها في عملية طرح ثاني أوكسيد الكاربون عبر جدران الأسناخ لاكتساب الأوكسجين، حيث يكون <span class="num">PCO₂</span> مرتفعاً في الأنسجة ويجري العكس تماماً في الرئتين.</p>
+          <h3>ثالثاً: الأس الهيدروجيني</h3>
+          <p>ترتبط درجة ألفة الهيموكلوبين بدرجة حامضية الدم، فـ<mark>انخفاض الأس الهيدروجيني</mark> للدم يعني انخفاضاً في درجة ألفة الهيموكلوبين للاتحاد بالأوكسجين.</p>
+          <div class="note def"><span class="tag">تأثير بور</span><p><span class="en">Bohr effect</span> يطلق على التأثيرات الثلاث السابقة (الحرارة، PCO₂، الأس الهيدروجيني) على ألفة الهيموكلوبين للأوكسجين.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">تنخفض الألفة بين الهيموكلوبين والأوكسجين كلما ارتفعت درجة الحرارة، وما أهمية ذلك؟</p><p class="a">لأن العلاقة بينهما عكسية، وأهميتها أن العضلات أثناء الجهد والتمارين تحتاج مزيداً من الأوكسجين لتحرير الطاقة، فيتحرر لها أوكسجين أكثر.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">قد يؤدي تعرض الأطراف للبرد الشديد إلى موتها اختناقاً.</p><p class="a">لأن الألفة بين الهيموكلوبين والأوكسجين تزداد بالبرد فلا يتحرر أوكسجين كافٍ للأفعال الأيضية في الأطراف، فتفقد قدرتها على تعويض الحرارة المفقودة.</p></div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>حرّك العوامل وراقب انزياح المنحني</h3><span class="kind">محاكاة · شكل 3‑9</span></div>
+          <svg class="fig" id="bohr" viewBox="0 0 560 400" role="img" aria-label="تأثير الحرارة وثاني أوكسيد الكاربون والحامضية على منحني الافتراق"></svg>
+          <div class="seg" id="bohrPre"><button type="button" aria-pressed="true" data-v="rest">دم في الرئتين</button><button type="button" aria-pressed="false" data-v="ex">عضلة أثناء التمرين</button><button type="button" aria-pressed="false" data-v="cold">طرف في برد شديد</button><button type="button" aria-pressed="false" data-v="fig">شكل 3‑9: أربع حرارات</button></div>
+          <div class="ctrls">
+            <div class="range"><label for="bT">درجة الحرارة (°م)<b id="bTV">38</b></label><input id="bT" type="range" min="10" max="42" step="1" value="38"></div>
+            <div class="range"><label for="bC">PCO₂ (ملم زئبق)<b id="bCV">40</b></label><input id="bC" type="range" min="20" max="80" step="1" value="40"></div>
+            <div class="range"><label for="bH">الأس الهيدروجيني pH<b id="bHV">7.40</b></label><input id="bH" type="range" min="7.1" max="7.7" step="0.01" value="7.4"></div>
+          </div>
+          <div class="readout" id="bohrRO"></div>
+          <div class="status" id="bohrMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REVIEW ================= -->
+    <section class="sec" id="review" data-title="المراجعة والاختبار">
+      <div class="sec-head">
+        <div class="sec-n">✓</div>
+        <h2>المراجعة والاختبار</h2>
+        <div class="sec-meta"><span class="page-ref">أسئلة «علل» والأرقام المهمة من الفصل كله</span></div>
+      </div>
+      <div class="prose" style="max-width:none"><h3>أسئلة علل</h3><p>فكّر في الجواب أولاً، ثم اضغط على البطاقة لتقلبها.</p></div>
+      <div class="why-grid" id="whyCards" style="margin-top:12px"></div>
+
+      <div class="prose" style="max-width:none;margin-top:30px"><h3>أرقام يجب حفظها</h3></div>
+      <div class="nb-filter seg" id="numFilter" style="margin-top:10px"></div>
+      <div class="nums" id="nums" style="margin-top:12px"></div>
+
+      <div class="stack" style="margin-top:30px;max-width:760px">
+        <div class="prose" style="max-width:none"><h3>اختبر نفسك</h3><p><span id="qzN">18</span> سؤالاً من الفصل بترتيب عشوائي. اختر الجواب وسيظهر لك التعليل مباشرة.</p></div>
+        <div class="quiz" id="quiz"></div>
+      </div>
+      <div class="stack" style="margin-top:30px">
+        <div class="prose" style="max-width:none"><h3>المصطلحات</h3></div>
+        <div><div class="gloss" id="gloss"></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer><div class="in">
+  <span>مبني على كتاب فسلجة الحيوان، الفصل الثالث: فسيولوجيا التنفس (ص 92–112). ما كُتب عليه «للفهم» شرح إضافي ليس من نص الكتاب.</span>
+  <span>المرحلة الرابعة</span>
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/core.js"></script>
+<script src="js/viewer3d.js"></script>
+<script src="js/sims-a.js"></script>
+<script src="js/sims-b.js"></script>
+<script src="js/sims-c.js"></script>
+<script src="js/review.js"></script>
+</body>
+</html>
