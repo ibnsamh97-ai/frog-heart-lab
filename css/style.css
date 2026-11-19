@@ -37,6 +37,10 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-siz
 /* header */
 .top{display:grid;gap:4px;margin-bottom:16px}
 .eyebrow{font-size:12.5px;color:var(--muted);letter-spacing:.01em}
+.more-labs{display:flex;flex-wrap:wrap;gap:6px 8px;margin-top:6px}
+.more-labs a{font-size:13px;font-weight:600;padding:5px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;line-height:1.4}
+.more-labs a:hover{border-color:var(--blood)}
+.more-labs a b{color:var(--blood)}
 h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,4.2vw,40px);line-height:1.15;margin:0;text-wrap:balance}
 .sub{margin:0;color:var(--muted);max-width:68ch}
 .progress{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:10px}

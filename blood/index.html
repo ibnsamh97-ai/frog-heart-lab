@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مختبر سحب الدم</title>
+<meta name="description" content="تجربة عملية ثلاثية الأبعاد لسحب الدم من الوريد والإصبع، وتحضير الدم الكامل والبلازما والمصل، مع شرح محاضرة فسلجة الدم واختبار.">
+<meta property="og:title" content="مختبر سحب الدم">
+<meta property="og:description" content="اسحب الدم بيدك خطوة بخطوة في مجسم ثلاثي الأبعاد، ثم افصل البلازما والمصل بجهاز الطرد المركزي.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23a8202f'/%3E%3Cpath d='M32 10C25 21 17 30 17 39a15 15 0 0 0 30 0c0-9-8-18-15-29z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Aref+Ruqaa:wght@700&family=Cairo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <button class="toc-btn" id="tocBtn" type="button" aria-controls="toc" aria-expanded="false">الفهرس</button>
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="var(--blood)"/><path d="M32 10C25 21 17 30 17 39a15 15 0 0 0 30 0c0-9-8-18-15-29z" fill="#fff"/><path d="M25 40a7 7 0 0 0 7 7" fill="none" stroke="var(--blood)" stroke-width="3" stroke-linecap="round"/></svg>
+      <b>مختبر سحب الدم</b>
+    </a>
+    <span class="top-sec" id="topSec">فسلجة الدم · عملي</span>
+    <button class="font-btn" id="fontBtn" type="button" title="تغيير نوع الخط"><span class="aa">أ</span><span id="fontName">نسخ</span></button>
+  </div>
+  <div class="progress"><i id="progress"></i></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" id="toc" aria-label="فهرس المحاضرة">
+    <h2>فهرس المحاضرة الخامسة</h2>
+    <ol>
+      <li><a href="#lab"><span class="n">01</span>التجربة العملية: سحب الدم</a></li>
+      <li><a href="#other"><span class="n">02</span>الطرق الأخرى: الشعيري والشرياني</a></li>
+      <li><a href="#prep"><span class="n">03</span>تحضير العينات</a></li>
+      <li><a href="#diff"><span class="n">04</span>الفرق بين المصل والبلازما</a></li>
+      <li><a href="#store"><span class="n">05</span>حفظ العينات ولونها</a></li>
+      <li><a href="#sites"><span class="n">06</span>أماكن السحب وأسبابه والأدوات</a></li>
+      <li><a href="#blood"><span class="n">07</span>الدم ومكوناته</a></li>
+      <li><a href="#plasma"><span class="n">08</span>البلازما وبروتيناتها</a></li>
+      <li><a href="#func"><span class="n">09</span>وظائف الدم وتكوين خلاياه</a></li>
+      <li><a href="#review"><span class="n">✓</span>المراجعة والاختبار</a></li>
+    </ol>
+    <a class="toc-back" href="https://ibnsamh97-ai.github.io/frog-heart-lab/">مختبر قلب الضفدع ←</a>
+  </nav>
+
+  <main id="top">
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+      <div>
+        <div class="eyebrow">فسلجة الحيوان العملي · المرحلة الرابعة · المحاضرة الخامسة</div>
+        <h1>سحب <em>الدم</em><br>وتحضير العينات</h1>
+        <p class="lead">تجربة عملية تقوم بها بيدك في مجسم ثلاثي الأبعاد: تربط الرباط، تختار الوريد، تعقّم، تضبط زاوية الإبرة وتسحب الدم بالحقنة، ثم توخز الإصبع وتجمع الدم الشعيري. بعدها تفصل <b>البلازما</b> و<b>المصل</b> بجهاز الطرد المركزي. والمحاضرة كاملة مشروحة تحتها.</p>
+        <div class="hero-facts">
+          <div class="fact"><b class="num">5 L</b><span>حجم الدم في الجسم تقريباً</span></div>
+          <div class="fact"><b class="num">7%</b><span>من وزن الجسم</span></div>
+          <div class="fact"><b class="num">15–30°</b><span>زاوية إدخال الإبرة في الوريد</span></div>
+        </div>
+        <div class="hero-actions">
+          <a class="btn primary" href="#lab">ابدأ التجربة العملية</a>
+          <a class="btn" href="#prep">تحضير العينات</a>
+          <a class="btn" href="#review">الاختبار</a>
+        </div>
+      </div>
+      <figure class="hero-fig">
+        <svg viewBox="0 0 420 360" role="img" aria-label="ثلاثة أنابيب: دم كامل، بلازما مفصولة، مصل مفصول" id="heroTubes"></svg>
+        <figcaption class="cap">الدم الكامل، ثم البلازما (ثلاث طبقات)، ثم المصل (طبقتان)</figcaption>
+      </figure>
+    </section>
+
+    <!-- ================= 01 LAB ================= -->
+    <section class="sec" id="lab" data-title="التجربة العملية: سحب الدم">
+      <div class="sec-head">
+        <div class="sec-n">01</div>
+        <h2>التجربة العملية: سحب الدم</h2>
+        <div class="sec-meta"><span class="en">Venipuncture</span><span class="page-ref">اختر الأداة من الصندوق، ثم اضغط على مكان استعمالها في المجسم</span></div>
+      </div>
+      <div class="lab-top">
+        <div class="seg" id="labMode" role="group" aria-label="طريقة السحب">
+          <button type="button" data-v="vein" aria-pressed="true">من الوريد</button>
+          <button type="button" data-v="cap" aria-pressed="false">من الشعيرات (الإصبع)</button>
+          <button type="button" data-v="artery" aria-pressed="false">من الشريان</button>
+        </div>
+        <button type="button" class="chip-btn" id="labLabels" aria-pressed="true">أسماء الأوردة</button>
+      </div>
+      <div class="lab-grid">
+        <div class="lab-stage">
+          <div class="viewer lab" id="lab3d" aria-label="مجسم ثلاثي الأبعاد لذراع ويد مع أدوات سحب الدم">
+            <div class="lab-pill" id="labPill">1 · التحضير</div>
+            <div class="lab-toast" id="labToast" hidden></div>
+          </div>
+          <div class="tray" id="tray" role="toolbar" aria-label="صندوق الأدوات"></div>
+          <p class="cap">اسحب بإصبع واحد لتدوير المشهد، وبإصبعين للتكبير. اضغط على أداة في الصندوق أو على الطاولة لاختيارها.</p>
+        </div>
+        <aside class="step-card" id="stepCard" aria-live="polite">
+          <div class="st-top"><span id="stN">الخطوة 1</span><span id="stMode">سحب الدم من الوريد</span></div>
+          <div class="st-bar"><i id="stBar"></i></div>
+          <h3 id="stTitle">التحضير والتعريف</h3>
+          <p id="stText">جارٍ تجهيز المختبر…</p>
+          <div class="st-ctl" id="stCtl"></div>
+          <div class="status" id="stFb" hidden></div>
+          <div class="st-act"><button type="button" class="btn" id="stHelp">ساعدني</button><button type="button" class="btn" id="stReset">ابدأ من جديد</button></div>
+          <details class="st-list-w" id="stListWrap"><summary>كل الخطوات</summary><ol class="st-list" id="stList"></ol></details>
+        </aside>
+      </div>
+      <div class="notes-row">
+        <div class="note why"><span class="tag">علل</span><p class="q">نفضّل الوريد المرفقي الأوسط للسحب.</p><p class="a">لأنه كبير وثابت لا يتحرك تحت الجلد، وبعيد عن الأعصاب والشرايين، فالسحب منه أسهل وأقل ألماً.</p></div>
+        <div class="note why"><span class="tag">علل</span><p class="q">يُفك الرباط قبل إخراج الإبرة.</p><p class="a">لأن الرباط يحبس الدم في الوريد، فلو أخرجنا الإبرة وهو مربوط يندفع الدم من الثقب ويتكوّن ورم دموي (كدمة).</p></div>
+        <div class="note why"><span class="tag">علل</span><p class="q">نسحب المكبس ببطء.</p><p class="a">لأن السحب السريع يكسر كريات الدم الحمر (تحلل الدم) فيتغير لون المصل وتفسد النتائج، وقد ينخمص جدار الوريد.</p></div>
+      </div>
+    </section>
+
+    <!-- ================= 02 OTHER ================= -->
+    <section class="sec" id="other" data-title="الطرق الأخرى: الشعيري والشرياني">
+      <div class="sec-head">
+        <div class="sec-n">02</div>
+        <h2>الطرق الأخرى: الدم الشعيري والشرياني</h2>
+        <div class="sec-meta"><span class="en">Capillary blood</span><span class="en">Arterial blood</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p><b>الدم الشعيري</b> هو الدم الذي نحصل عليه من الشعيرات الدموية الدقيقة تحت الجلد. يُسحب بوخز الجلد بـ<mark>إبرة صغيرة معقمة (لانسيت Lancet)</mark>، وتُجمع القطرات بواسطة <mark>أنبوب شعري أو ماصة</mark>.</p>
+          <div class="note def"><span class="tag">يُستخدم في</span><p>قياس الهيموكلوبين (Hb)، وعدّ كريات الدم الحمر وكريات الدم البيض والصفيحات الدموية، وغيرها من الفحوص التي تحتاج كمية قليلة من الدم.</p></div>
+          <p>ونأخذه من أحد ثلاثة أماكن:</p>
+          <div class="cards" id="capSites"></div>
+          <div class="note key"><span class="tag">انتبه</span><p>القطرة الأولى تُمسح بقطن جاف، ولا نعصر الإصبع بقوة، لأن الدم يختلط عندها بسائل الأنسجة فتقل دقة النتائج. <span class="u-note">للفهم</span></p></div>
+          <p><button type="button" class="btn primary" data-labmode="cap">جرّب وخز الإصبع في المحاكاة</button></p>
+        </div>
+        <div class="stack">
+          <div class="sim">
+            <div class="sim-h"><h3>الدم الشرياني</h3><span class="kind">معلومة · للفهم</span></div>
+            <svg class="fig" id="arteryFig" viewBox="0 0 520 300" role="img" aria-label="موقع الشريان الكعبري عند الرسغ"></svg>
+            <div class="prose" style="max-width:none">
+              <p>الشريان أحد أماكن سحب الدم الثلاثة في المحاضرة. يُسحب عادة من <b>الشريان الكعبري</b> عند الرسغ جهة الإبهام لقياس <b>غازات الدم</b>، ويقوم به طبيب أو مختص مدرّب فقط لأن ضغط الدم فيه عالٍ والنزف أصعب إيقافاً.</p>
+            </div>
+            <p><button type="button" class="btn" data-labmode="artery">أرني مكانه في المجسم</button></p>
+          </div>
+          <div class="tbl"><table>
+            <thead><tr><th></th><th>الدم الوريدي</th><th>الدم الشعيري</th><th>الدم الشرياني</th></tr></thead>
+            <tbody>
+              <tr><td>الأداة</td><td>حقنة وإبرة</td><td>واخزة (Lancet)</td><td>حقنة مع هيبارين</td></tr>
+              <tr><td>الكمية</td><td>كبيرة (مل)</td><td>قطرات</td><td>قليلة</td></tr>
+              <tr><td>المكان</td><td>باطن المرفق</td><td>الإصبع، شحمة الأذن، الكعب</td><td>الرسغ (الكعبري)</td></tr>
+              <tr><td>اللون</td><td>أحمر قاتم</td><td>أحمر</td><td>أحمر فاتح</td></tr>
+            </tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 03 PREP ================= -->
+    <section class="sec" id="prep" data-title="تحضير العينات">
+      <div class="sec-head">
+        <div class="sec-n">03</div>
+        <h2>تحضير عينات الدم</h2>
+        <div class="sec-meta"><span class="en">Whole blood</span><span class="en">Plasma</span><span class="en">Serum</span></div>
+      </div>
+      <p class="sec-lead">بعد سحب الدم نحضّر منه <b>ثلاثة أنواع</b> من العينات حسب الفحص المطلوب. اختر النوع وطبّق الخطوات على المنضدة:</p>
+      <div class="lab-top">
+        <div class="seg" id="benchMode" role="group" aria-label="نوع العينة">
+          <button type="button" data-v="whole" aria-pressed="true">الدم الكامل</button>
+          <button type="button" data-v="plasma" aria-pressed="false">البلازما</button>
+          <button type="button" data-v="serum" aria-pressed="false">المصل</button>
+        </div>
+      </div>
+      <div class="lab-grid bench-grid">
+        <div class="lab-stage">
+          <div class="viewer lab" id="bench3d" aria-label="منضدة المختبر: أنابيب وجهاز طرد مركزي وماصة دقيقة"></div>
+          <div class="readout" id="benchRO"></div>
+        </div>
+        <aside class="step-card bench-card">
+          <div class="st-top"><span id="bnN">الخطوة 1</span><span id="bnTube"></span></div>
+          <h3 id="bnTitle"></h3>
+          <p id="bnText"></p>
+          <div class="st-ctl" id="bnCtl"></div>
+          <div class="status" id="bnMsg" hidden></div>
+          <ol class="bn-steps" id="bnSteps"></ol>
+        </aside>
+      </div>
+      <div class="cards three" id="sampleCards" style="margin-top:20px"></div>
+    </section>
+
+    <!-- ================= 04 DIFF ================= -->
+    <section class="sec" id="diff" data-title="الفرق بين المصل والبلازما">
+      <div class="sec-head">
+        <div class="sec-n">04</div>
+        <h2>الفرق بين المصل والبلازما</h2>
+        <div class="sec-meta"><span class="en">Serum vs Plasma</span></div>
+      </div>
+      <div class="cols">
+        <div class="stack">
+          <div class="tbl"><table class="cmp">
+            <thead><tr><th></th><th>المصل Serum</th><th>البلازما Plasma</th></tr></thead>
+            <tbody>
+              <tr><td>الأنبوب</td><td>يُفصل في أنبوب <b>لا يحتوي على مانع تخثر</b></td><td>يُفصل في أنبوب <b>يحتوي على مانع تخثر</b></td></tr>
+              <tr><td>عوامل التخثر</td><td><b>لا يحتوي</b> على عوامل التخثر مثل الفايبرينوجين والبروثرومبين، لأنها استُهلكت في تكوين الخثرة</td><td><b>يحتوي</b> على عوامل التخثر</td></tr>
+              <tr><td>الطبقات</td><td>طبقتان: الخثرة في الأسفل، والمصل في الأعلى</td><td>ثلاث طبقات: الخلايا، البلازما، والطبقة البيضاء (Buffy coat)</td></tr>
+            </tbody></table></div>
+          <div class="note key"><span class="tag">قاعدة للحفظ</span><p><b>المصل = البلازما − عوامل التخثر.</b> فكل ما في المصل موجود في البلازما، لكن ليس العكس.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">لا يحتوي المصل على الفايبرينوجين.</p><p class="a">لأن الفايبرينوجين تحوّل إلى ألياف الفايبرين واستُهلك في تكوين الخثرة عندما تُرك الدم يتجلط في أنبوب بلا مانع تخثر.</p></div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>الأنبوبان بعد الطرد المركزي</h3><span class="kind">اضغط على أي طبقة</span></div>
+          <svg class="fig" id="diffFig" viewBox="0 0 520 430" role="img" aria-label="أنبوب أحمر الغطاء فيه مصل وخثرة، وأنبوب بنفسجي الغطاء فيه بلازما وطبقة بيضاء وخلايا"></svg>
+          <div class="status" id="diffMsg">اضغط على طبقة في أحد الأنبوبين لمعرفة محتواها.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 05 STORE ================= -->
+    <section class="sec" id="store" data-title="حفظ العينات ولونها">
+      <div class="sec-head">
+        <div class="sec-n">05</div>
+        <h2>حفظ العينات وتقييم لونها</h2>
+        <div class="sec-meta"><span class="en">Storage</span><span class="en">Aliquoting</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <h3>درجات حرارة الحفظ</h3>
+          <div class="temps">
+            <div class="temp cool"><b class="num">2–8 °C</b><span>الثلاجة: للحفظ <b>قصير الأمد</b> (للبلازما والمصل)</span></div>
+            <div class="temp cold"><b class="num">−20 °C</b><span>المجمّدة أو أقل: للحفظ <b>طويل الأمد</b></span></div>
+          </div>
+          <h3>التقسيم قبل التجميد</h3>
+          <p>يُفضّل <mark>تقسيم العينة إلى أجزاء صغيرة (Aliquots)</mark> قبل التجميد، لتجنب تكرار التجميد والإذابة، لأن ذلك قد يؤدي إلى <b>تغيّر خصائص البروتينات والإنزيمات</b>.</p>
+          <p>وعند الحاجة إلى استخدام العينة المجمّدة: تُذاب <b>تدريجياً</b> ثم تُمزج <b>بلطف</b> قبل التحليل.</p>
+          <div class="sim" style="margin-top:6px">
+            <div class="sim-h"><h3>جرّب: عينة واحدة أم أجزاء؟</h3><span class="kind">محاكاة · للفهم</span></div>
+            <div class="seg" id="aliqMode"><button type="button" data-v="one" aria-pressed="true">أنبوب واحد كبير</button><button type="button" data-v="split" aria-pressed="false">مقسّم إلى 4 أجزاء</button></div>
+            <svg class="fig" id="aliqFig" viewBox="0 0 520 210" role="img" aria-label="سلامة البروتينات مع تكرار التجميد والإذابة"></svg>
+            <div class="ctrls"><button type="button" class="btn primary" id="aliqUse">أذب واستعمل جزءاً للفحص</button><button type="button" class="btn" id="aliqReset">من جديد</button></div>
+            <div class="status" id="aliqMsg"></div>
+          </div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>لون المصل أو البلازما</h3><span class="kind">اختر اللون</span></div>
+          <div class="seg" id="colorSeg">
+            <button type="button" data-v="normal" aria-pressed="true">طبيعي</button>
+            <button type="button" data-v="hemo" aria-pressed="false">تحلل الدم</button>
+            <button type="button" data-v="icteric" aria-pressed="false">البيليروبين</button>
+            <button type="button" data-v="lipemic" aria-pressed="false">دهني</button>
+          </div>
+          <svg class="fig" id="colorFig" viewBox="0 0 520 330" role="img" aria-label="أنبوب يتغير لون المصل فيه"></svg>
+          <div class="status" id="colorMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 06 SITES ================= -->
+    <section class="sec" id="sites" data-title="أماكن السحب وأسبابه والأدوات">
+      <div class="sec-head">
+        <div class="sec-n">06</div>
+        <h2>أماكن سحب الدم وأسبابه والأدوات</h2>
+        <div class="sec-meta"><span class="en">Blood sampling</span></div>
+      </div>
+      <div class="cols even">
+        <div class="prose">
+          <h3>أماكن سحب الدم</h3>
+          <p>يتم سحب عينات الدم من: <mark>الوريد</mark> (Vein)، <mark>الشريان</mark> (Artery)، <mark>الشعيرات الدموية</mark> (Capillaries).</p>
+          <h3>أسباب سحب الدم</h3>
+          <ol class="reasons">
+            <li><b>تشخيص المرض.</b></li>
+            <li><b>متابعة حالة المريض.</b></li>
+            <li><b>الكشف المبكر:</b> إجراء بعض التحاليل للكشف عن بعض الأمراض في وقت مبكر.</li>
+            <li><b>اختبار التوافق:</b> للتأكد من توافق دم المتبرع مع دم المريض (Cross-match).</li>
+          </ol>
+        </div>
+        <div class="stack">
+          <div class="prose" style="max-width:none"><h3>المواد المستعملة</h3><p>اضغط على أي أداة لمعرفة استعمالها.</p></div>
+          <div class="mats" id="mats"></div>
+          <div class="status" id="matMsg">عينة الدم، أنابيب الاختبار، الرباط الضاغط (تورنيكا)، الحقنة، القطن، الكحول، جهاز الطرد المركزي، الماصة الدقيقة.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 07 BLOOD ================= -->
+    <section class="sec" id="blood" data-title="الدم ومكوناته">
+      <div class="sec-head">
+        <div class="sec-n">07</div>
+        <h2>الدم ومكوناته</h2>
+        <div class="sec-meta"><span class="en">Blood</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <div class="note def"><span class="tag">تعريف</span><p><b>الدم:</b> سائل أحمر، وهو نسيج ضام متخصص من أصل الأديم المتوسط (Mesoderm)، يجري في الأوردة والشرايين والشعيرات الدموية.</p></div>
+          <p>تحتوي <mark>البلازما</mark> على بروتينات ذائبة، ويتحول بعضها إلى <b>ألياف الفايبرين</b> عند تخثر الدم، وهذه الألياف <u class="u">غير موجودة في الدم السائل الطبيعي</u>.</p>
+          <p>يقوم الدم بنقل المواد الغذائية والأوكسجين والفضلات وثاني أوكسيد الكاربون والهرمونات بين أجزاء الجسم، ويجري في <mark>جهاز مغلق</mark> يتكون من القلب والأوعية الدموية.</p>
+          <p>يتألف الدم من <b>كريات الدم الحمر</b> و<b>كريات الدم البيض</b> و<b>الصفيحات الدموية</b> معلّقة في البلازما. تتكون خلايا الدم في <mark>نخاع العظم الأحمر</mark>، وتسمى هذه العملية تكوين الدم (Haemopoiesis).</p>
+          <p>يبلغ حجم الدم حوالي <mark>5 لتر</mark>، ويشكل حوالي <mark>7% من وزن الجسم</mark>.</p>
+          <div class="sim">
+            <div class="sim-h"><h3>كم لتراً من الدم في جسمك؟</h3><span class="kind">حاسبة</span></div>
+            <div class="ctrls"><div class="range"><label for="bw">وزن الجسم (كغم)<b id="bwV">70</b></label><input id="bw" type="range" min="20" max="130" step="1" value="70"></div></div>
+            <div class="readout" id="bwRO"></div>
+            <p class="cap">7% من وزن الجسم. وكثافة الدم أعلى قليلاً من الماء (نحو 1.06)، لذا 4.9 كغم ≈ 4.6 لتر. <span class="u-note">للفهم</span></p>
+          </div>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>مكونات الدم</h3><span class="kind">اضغط على مكوّن</span></div>
+          <svg class="fig" id="compFig" viewBox="0 0 520 470" role="img" aria-label="أنبوب دم مفصول إلى بلازما وطبقة بيضاء وكريات حمر"></svg>
+          <div class="status" id="compMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 08 PLASMA ================= -->
+    <section class="sec" id="plasma" data-title="البلازما وبروتيناتها">
+      <div class="sec-head">
+        <div class="sec-n">08</div>
+        <h2>البلازما وبروتيناتها</h2>
+        <div class="sec-meta"><span class="en">Plasma</span><span class="en">Plasma proteins</span></div>
+      </div>
+      <div class="cols">
+        <div class="prose">
+          <p><b>البلازما</b> سائل رائق مائل للاصفرار، يشكل <mark>54%</mark> من الدم، وتتكون من:</p>
+          <ol>
+            <li><b>الماء</b>: يشكل <mark>90%</mark> منها، ويساعد على تنظيم درجة حرارة الجسم عند 37 °C.</li>
+            <li><b>بروتينات البلازما</b>: تشكل <mark>7%</mark> (7 غم لكل 100 سم³)، وتشمل الألبومين والكلوبيولين والفايبرينوجين.</li>
+            <li><b>المواد الغذائية الممتصة</b>: الكلوكوز، الأحماض الأمينية، الأحماض الدهنية.</li>
+            <li><b>الأملاح غير العضوية</b>: الصوديوم Na، البوتاسيوم K، المغنيسيوم Mg، الكالسيوم Ca.</li>
+            <li><b>الإفرازات الداخلية</b>: الهرمونات.</li>
+          </ol>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>ماذا في 100 جزء من البلازما؟</h3><span class="kind">اضغط على الجزء</span></div>
+          <svg class="fig" id="plasmaFig" viewBox="0 0 520 300" role="img" aria-label="تركيب البلازما"></svg>
+          <div class="status" id="plasmaMsg"></div>
+        </div>
+      </div>
+      <div class="prose" style="max-width:none;margin-top:26px"><h3>وظائف بروتينات البلازما</h3></div>
+      <div class="cards" id="protCards" style="margin-top:12px"></div>
+      <div class="cols" style="margin-top:20px">
+        <div class="sim">
+          <div class="sim-h"><h3>المحافظة على الأس الهيدروجيني</h3><span class="kind">حرّك المؤشر</span></div>
+          <svg class="fig" id="phFig" viewBox="0 0 520 150" role="img" aria-label="مقياس الأس الهيدروجيني للدم"></svg>
+          <div class="ctrls"><div class="range"><label for="ph">pH الدم<b id="phV">7.40</b></label><input id="ph" type="range" min="6.9" max="7.8" step="0.01" value="7.4"></div></div>
+          <div class="status" id="phMsg"></div>
+        </div>
+        <div class="prose">
+          <div class="note why"><span class="tag">علل</span><p class="q">للألبومين دور في المحافظة على حجم الدم وضغطه.</p><p class="a">لأنه يحافظ على الضغط الأزموزي للدم، فيمنع خروج الماء من الأوعية إلى الأنسجة.</p></div>
+          <div class="note why"><span class="tag">علل</span><p class="q">للفايبرينوجين دور في ضغط الدم.</p><p class="a">لأنه يزيد لزوجة الدم، واللزوجة تزيد المقاومة المحيطية للدم.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 09 FUNC ================= -->
+    <section class="sec" id="func" data-title="وظائف الدم وتكوين خلاياه">
+      <div class="sec-head">
+        <div class="sec-n">09</div>
+        <h2>وظائف الدم وتكوين خلاياه</h2>
+        <div class="sec-meta"><span class="en">Functions of blood</span><span class="en">Hematopoiesis</span></div>
+      </div>
+      <div class="func-grid" id="funcCards"></div>
+      <div class="cols" style="margin-top:26px">
+        <div class="prose">
+          <h3>تكوين خلايا الدم</h3>
+          <p>تتكوّن خلايا الدم في <mark>نخاع العظم</mark>، وهو نوعان:</p>
+          <div class="note def"><span class="tag">النخاع الأحمر</span><p>مسؤول عن تكوين خلايا الدم، ويوجد في العظام الإسفنجية: <b>الحوض، الفقرات، الأضلاع، عظم القص، الجمجمة، ونهايات العظام الطويلة</b>.</p></div>
+          <div class="note def"><span class="tag">النخاع الأصفر</span><p>يتكون معظمه من <b>الدهون</b>، ويمكن أن يتحول إلى نخاع أحمر عند الحاجة.</p></div>
+          <p>تبدأ العملية من <mark>الخلايا الجذعية المكوّنة للدم</mark> (Hematopoietic stem cells)، وتنتج: كريات الدم الحمر، كريات الدم البيض، والصفيحات الدموية التي تتكون من <b>أجزاء من سيتوبلازم خلايا كبيرة</b> تسمى الخلايا العملاقة (Megakaryocytes).</p>
+        </div>
+        <div class="sim">
+          <div class="sim-h"><h3>من الخلية الجذعية إلى خلايا الدم</h3><span class="kind">اضغط على خلية</span></div>
+          <svg class="fig" id="hemoFig" viewBox="0 0 520 380" role="img" aria-label="الخلية الجذعية تنتج كريات حمر وبيض وصفيحات"></svg>
+          <div class="status" id="hemoMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= REVIEW ================= -->
+    <section class="sec" id="review" data-title="المراجعة والاختبار">
+      <div class="sec-head">
+        <div class="sec-n">✓</div>
+        <h2>المراجعة والاختبار</h2>
+        <div class="sec-meta"><span class="page-ref">أسئلة علل، والأرقام المهمة، واختبار سريع</span></div>
+      </div>
+      <div class="prose" style="max-width:none"><h3>أسئلة علل</h3><p>فكّر في الجواب أولاً، ثم اضغط على البطاقة لتقلبها.</p></div>
+      <div class="why-grid" id="whyCards" style="margin-top:12px"></div>
+      <div class="prose" style="max-width:none;margin-top:30px"><h3>أرقام يجب حفظها</h3></div>
+      <div class="nums" id="nums" style="margin-top:12px"></div>
+      <div class="stack" style="margin-top:30px;max-width:760px">
+        <div class="prose" style="max-width:none"><h3>اختبر نفسك</h3><p><span id="qzN">15</span> سؤالاً بترتيب عشوائي. اختر الجواب وسيظهر لك التعليل مباشرة.</p></div>
+        <div class="quiz" id="quiz"></div>
+      </div>
+      <div class="stack" style="margin-top:30px">
+        <div class="prose" style="max-width:none"><h3>المصطلحات</h3></div>
+        <div class="gloss" id="gloss"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer><div class="in">
+  <span>مبني على محاضرة فسلجة الحيوان العملي، المرحلة الرابعة، المحاضرة الخامسة: فسلجة الدم. إعداد م. اسماء خالد مطني، م. رانيا ناظم صبحي، م.د. رغد طايس سعيد. ما كُتب عليه «للفهم» شرح إضافي ليس من نص المحاضرة.</span>
+  <a href="https://ibnsamh97-ai.github.io/frog-heart-lab/">مختبر قلب الضفدع</a>
+</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="js/core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/environments/RoomEnvironment.js"></script>
+<script src="js/viewer3d.js"></script>
+<script src="js/lab3d.js"></script>
+<script src="js/steps.js"></script>
+<script src="js/bench3d.js"></script>
+<script src="js/sims.js"></script>
+<script src="js/review.js"></script>
+</body>
+</html>

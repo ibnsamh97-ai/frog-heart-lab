@@ -58,4 +58,5 @@ python3 -m http.server 8000
 ---
 
 ## صفحات أخرى في المشروع
+- [مختبر سحب الدم ثلاثي الأبعاد (فسلجة الدم، المحاضرة الخامسة، عملي)](https://ibnsamh97-ai.github.io/frog-heart-lab/blood/)
 - [مختبر فسلجة التنفس (الفصل الثالث، نظري)](https://ibnsamh97-ai.github.io/frog-heart-lab/respiration/)
